@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<!--
+  极曜微科技 · 品牌页
+  ------------------------------------------------------------
+  内容来源：E:\网页\index.html 里婉婉科技那部分（仪器仪表），型号没有编造。
+  页面顺序：首屏（轮播 + 底部品牌滚动条）→ 产品分类 → 数据带
+       → 实拍画廊 → 选型流程 → 服务承诺 → 联系。
+  图片在 img/（实拍图从 ../source 复制；首屏抠图在 img/hero/）。
+-->
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>极曜微科技 · 工业检测仪器一站式选型</title>
+<meta name="description" content="上海极曜微科技有限公司：福禄克、飞础科、徕卡、岛津等 29 个品牌工业检测仪器供应商，正规授权渠道，原厂序列号可验真，上海立足长三角。">
+<link rel="icon" type="image/png" href="img/logo-mark.png">   <!-- 白底已抠成透明，浅色深色标签页里都不会带一块白斑 -->
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/effects.css">
+<link rel="stylesheet" href="css/menu.css">    <!-- 磨砂下拉面板：不要它就删掉这行 + js/menu.js + 下面 6 个 .menu -->
+<link rel="stylesheet" href="css/carousel.css"> <!-- 自动轮播：不要它就删掉这行 + js/carousel.js，两处版式自动退回静态 -->
+</head>
+<body>
+
+<!-- ============ 导航 ============
+     每个栏目都是"触发器"：data-menu 的值对应下面某个面板的 id（menu- + 值）。
+     删掉某个面板就把对应栏目上的 data-menu / caret 一起去掉，那个栏目会自动退回普通锚点。 -->
+<header class="nav">
+  <div class="nav__inner">
+    <a class="nav__logo" href="#top"><img class="nav__mark" src="img/logo-mark.png" alt="" width="282" height="262">极曜微科技</a>
+    <nav class="nav__links">
+      <a href="#overview" data-menu="overview" aria-expanded="false" aria-controls="menu-overview" aria-haspopup="true">概览<span class="caret" aria-hidden="true">▾</span></a>
+      <a href="#products" data-menu="products" aria-expanded="false" aria-controls="menu-products" aria-haspopup="true">产品<span class="caret" aria-hidden="true">▾</span></a>
+      <a href="#numbers" data-menu="numbers" aria-expanded="false" aria-controls="menu-numbers" aria-haspopup="true">数据<span class="caret" aria-hidden="true">▾</span></a>
+      <a href="#gallery" data-menu="gallery" aria-expanded="false" aria-controls="menu-gallery" aria-haspopup="true">实拍<span class="caret" aria-hidden="true">▾</span></a>
+      <a href="#service" data-menu="service" aria-expanded="false" aria-controls="menu-service" aria-haspopup="true">服务<span class="caret" aria-hidden="true">▾</span></a>
+    </nav>
+    <div class="nav__tools">
+      <button class="theme-btn" type="button" aria-label="切换主题">☀</button>
+      <!-- 产品中心是全站最常去的一页，导航又是"悬停展开面板"的设计（点栏目本身只开面板、不跳转），
+           所以入口必须单独做成一个能直接点的胶囊，滚到任何一个位置都能一键进去。 -->
+      <a class="btn btn--ghost nav__enter" href="products.html" style="padding:7px 16px;font-size:14px">产品中心</a>
+      <a class="btn btn--ghost nav__quote" href="#contact" style="padding:7px 16px;font-size:14px">要报价</a>
+      <button class="nav__burger" type="button" data-menu="all" aria-label="打开菜单" aria-expanded="false" aria-controls="menu-all"><i></i></button>
+    </div>
+  </div>
+</header>
+
+<!-- 整页压暗 + 磨砂，靠 backdrop-filter 糊掉导航以下的全部内容。
+     z-index 40 低于导航(50)和面板(51)，所以只有"背景"被糊，导航和面板自己保持清晰。 -->
+<div class="menu-scrim" aria-hidden="true"></div>
+
+<!-- ============ 六个下拉面板 ============
+     写在 </header> 外面、和导航做兄弟节点，不能写进 .nav 里：
+     .nav.is-stuck 有 backdrop-filter，它会变成 fixed 后代的包含块，
+     窄屏那条 top:var(--nav-h);bottom:0 会被算成零高度。细节见 css/menu.css 头部注释。 -->
+
+<div class="menu" id="menu-overview" aria-hidden="true">
+  <div class="menu__inner">
+    <div class="menu__cols">
+      <div>
+        <p class="menu__tit">极曜微科技</p>
+        <a class="menu__item" href="#overview">多品牌仪器一站式选型<span>红外热像、声学成像、显微观察、材料分析、力学测试</span></a>
+        <a class="menu__item" href="#numbers">29 个品牌 / 16 大类<span>正规授权渠道，原厂序列号可验真</span></a>
+        <a class="menu__item" href="#contact">上海 · 立足长三角<span>现货、报价快，售后有人接</span></a>
+      </div>
+      <div>
+        <p class="menu__tit">怎么开始</p>
+        <a class="menu__item" href="#flow">不知道型号，说场景就行<span>测什么参数、预算多少、产线还是实验室</span></a>
+        <a class="menu__item" href="products.html">完整产品目录<span>16 大类 101 款，型号与说明均可查</span></a>
+        <a class="menu__item" href="#gallery">看仓库实拍<span>所见即所得，四张实拍图</span></a>
+      </div>
+      <div>
+        <p class="menu__tit">重点看这里</p>
+        <a class="menu__item" href="#overview">滚动产品展示带<span>往下滚，四类主力机型一帧一帧推给你看</span></a>
+        <a class="menu__item" href="#service">四项服务承诺<span>正品 / 选型 / 校准 / 报价，写在合同里</span></a>
+        <a class="menu__item" href="#contact">直接要报价<span>180-1857-9934，常见机型当天出价</span></a>
+      </div>
+    </div>
+    <div class="menu__foot">
+      <p class="t-fine">页面说明：此处仅用于说明经营范围，正式上线前请补齐营业执照主体名称与 ICP 备案号。</p>
+      <a class="link-arrow" href="products.html">进产品中心 <span class="ar">›</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="menu" id="menu-products" aria-hidden="true">
+  <div class="menu__inner">
+    <div class="menu__cols">
+      <div>
+        <p class="menu__tit">热像与声学</p>
+        <a class="menu__item" href="products.html#cat-thermal">红外热成像<span>FOTRIC 2810 / 348L、Fluke TiX1060 / Ti480U、巨哥 MAG-F6</span></a>
+        <a class="menu__item" href="products.html#cat-acoustic">声学成像<span>Fluke ii1020C 泄漏与局放二合一、FOTRIC AC60 阵列</span></a>
+      </div>
+      <div>
+        <p class="menu__tit">显微与材料</p>
+        <a class="menu__item" href="products.html#cat-om">显微观察系统<span>徕卡 DM4M / DM18M / DCM8 / DVM6、JEOL 电镜</span></a>
+        <a class="menu__item" href="products.html#cat-metal">材料成分分析<span>岛津 XRD-7000 / EDX7000 / EPMA-8050G、力可碳硫</span></a>
+        <a class="menu__item" href="products.html#cat-utm">力学性能测试<span>岛津 AGX-V / UH-FX 2000KN、安东帕纳米压痕</span></a>
+      </div>
+      <div>
+        <p class="menu__tit">测量与试验</p>
+        <a class="menu__item" href="products.html#cat-electrical">电参数与现场测量<span>福禄克全系万用表、钳形表、绝缘电阻、电能质量</span></a>
+        <a class="menu__item" href="products.html#cat-aging">老化与环境试验<span>氙灯、UV 紫外、臭氧、热老化烘箱</span></a>
+        <a class="menu__item" href="products.html#cat-semi">半导体 / PCB<span>来料检验、板卡故障定位、焊接质量评估</span></a>
+      </div>
+    </div>
+    <div class="menu__foot">
+      <p class="t-fine">上面八块点进去直接落到对应分类；完整目录 16 大类 101 款，带型号与画册原图。</p>
+      <a class="link-arrow" href="products.html">进产品中心 <span class="ar">›</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="menu" id="menu-numbers" aria-hidden="true">
+  <div class="menu__inner">
+    <div class="menu__cols">
+      <div>
+        <p class="menu__tit">规模</p>
+        <a class="menu__item" href="#numbers">29 个品牌<span>代理与合作品牌，跨品牌帮你选型</span></a>
+        <a class="menu__item" href="products.html">16 大类品类<span>从热成像到环境试验全覆盖，明细在产品中心页</span></a>
+      </div>
+      <div>
+        <p class="menu__tit">能力</p>
+        <a class="menu__item" href="#numbers">-40℃ ~ +2000℃<span>热成像测温范围，炉口高温有对应机型</span></a>
+        <a class="menu__item" href="#numbers">0.1 nm<span>光学表面测量纵向分辨率（徕卡 DCM8）</span></a>
+      </div>
+      <div>
+        <p class="menu__tit">交付</p>
+        <a class="menu__item" href="#service">原厂序列号与保修卡<span>支持官网验真，杜绝水货翻新</span></a>
+        <a class="menu__item" href="#flow">四步选型流程<span>说场景 → 出方案 → 报价交期 → 交付校准</span></a>
+      </div>
+    </div>
+    <div class="menu__foot">
+      <p class="t-fine">上面这几个数都是本页数据带里的口径，没有另算一套。</p>
+      <a class="link-arrow" href="#numbers">看数据带 <span class="ar">›</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="menu" id="menu-gallery" aria-hidden="true">
+  <div class="menu__inner">
+    <div class="menu__cols">
+      <div>
+        <p class="menu__tit">热像与显微</p>
+        <a class="menu__item" href="#gallery">红外热像仪<span>手持与在线机型</span></a>
+        <a class="menu__item" href="#gallery">显微镜系统<span>金相与电镜</span></a>
+      </div>
+      <div>
+        <p class="menu__tit">测量与板级</p>
+        <a class="menu__item" href="#gallery">工业测量仪表<span>万用表、钳形表、绝缘测试</span></a>
+        <a class="menu__item" href="#gallery">半导体与 PCB<span>芯片级失效分析</span></a>
+      </div>
+      <div>
+        <p class="menu__tit">怎么用</p>
+        <a class="menu__item" href="#overview">滚动展示带<span>同样的四张图，往下滚一帧一帧推</span></a>
+        <a class="menu__item" href="#contact">实地看机<span>提前打电话约，别白跑</span></a>
+      </div>
+    </div>
+    <div class="menu__foot">
+      <p class="t-fine">实拍横排可以左右拖动；图片是原始尺寸，还没做响应式裁切。</p>
+      <a class="link-arrow" href="#gallery">看实拍 <span class="ar">›</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="menu" id="menu-service" aria-hidden="true">
+  <div class="menu__inner">
+    <div class="menu__cols">
+      <div>
+        <p class="menu__tit">正品与选型</p>
+        <a class="menu__item" href="#service">正品行货<span>正规授权，序列号保修卡齐全</span></a>
+        <a class="menu__item" href="#service">选型支持<span>多品牌之间挑最合适的型号</span></a>
+      </div>
+      <div>
+        <p class="menu__tit">售后与报价</p>
+        <a class="menu__item" href="#service">售后校准<span>保修期内对接原厂，到期校准维修</span></a>
+        <a class="menu__item" href="#service">报价快<span>常见机型当天出价，不等邮件</span></a>
+      </div>
+      <div>
+        <p class="menu__tit">联系</p>
+        <a class="menu__item" href="tel:18018579934">180-1857-9934<span>销售热线，批量与特殊规格直接打电话</span></a>
+        <a class="menu__item" href="#contact">周一至周六<span>工作时间来电优先处理</span></a>
+      </div>
+    </div>
+    <div class="menu__foot">
+      <p class="t-fine">正式上线前请补齐：授权书证明页。</p>
+      <a class="link-arrow" href="#service">看承诺 <span class="ar">›</span></a>
+    </div>
+  </div>
+</div>
+
+<!-- 窄屏专用：汉堡按钮展开的整屏菜单，只放栏目级入口，不做多列 -->
+<div class="menu" id="menu-all" aria-hidden="true">
+  <div class="menu__inner">
+    <div class="menu__cols">
+      <div>
+        <a class="menu__item" href="#overview">概览<span>多品牌仪器一站式选型</span></a>
+        <a class="menu__item" href="products.html">产品中心<span>16 大类 101 款完整目录</span></a>
+        <a class="menu__item" href="#numbers">数据<span>29 个品牌 / 16 大类</span></a>
+        <a class="menu__item" href="#gallery">实拍<span>仓库实拍，所见即所得</span></a>
+        <a class="menu__item" href="#flow">流程<span>不知道型号，说场景就行</span></a>
+        <a class="menu__item" href="#service">服务<span>四项承诺写死在合同里</span></a>
+        <a class="menu__item" href="tel:18018579934">180-1857-9934<span>要报价，直接打电话</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main id="top">
+
+<!-- ============ Hero ============ -->
+<section class="hero" id="overview">
+  <div class="orb orb--1"></div>
+  <div class="orb orb--2"></div>
+  <div class="orb orb--3"></div>
+  <p class="t-eyebrow" data-rv>极曜微科技 · 工业检测仪器综合供应商</p>
+
+  <!-- ============ 首屏轮播：标题 + 产品图整组左右替换 ============
+       data-carousel 是 js/carousel.js 的挂载标记，一个标记同时驱动下面两个轮播。
+       想加一屏：复制一个 .hcar__slide，改文案和图片就行，屏数脚本自己数（顺序看 HTML 里的位置）。
+       别忘了在下面的 .hcar__dots 里补一个对应序号的 button。
+       产品图是 img/hero/ 里的透明抠图（画册原图只抠背景，设备像素没重绘）。
+       第 1 屏是品牌主张（不带产品图），它同时是页面的 h1：脚本失效时只剩首屏，
+       看到的正好是原来那张静态主视觉。 -->
+  <div class="hcar" data-carousel data-interval="1500" data-rv aria-label="品牌主张与主力产品轮播">
+    <div class="hcar__stage">
+      <article class="hcar__slide hcar__slide--brand">
+        <h1 class="t-hero">多品牌仪器<br><span class="t-grad">一站式选型</span></h1>
+        <p class="t-sub">红外热像、声学成像、显微观察、材料分析、力学测试全覆盖。正规授权渠道，原厂序列号与保修卡，支持官网验真。</p>
+      </article>
+
+      <article class="hcar__slide">
+        <img class="hcar__img" src="img/hero/hero-thermal.png" alt="FOTRIC 348L 红外热像仪"
+             width="246" height="520" decoding="async" style="--h:clamp(150px,31vh,300px)">
+        <h2 class="t-hero">红外热像仪<br><span class="t-grad">把温度画成图像</span></h2>
+        <p class="t-sub">-40℃ ~ +2000℃ 全覆盖。FOTRIC 348L / 2810、Fluke TiX1060 / Ti480U，手持、在线、科研、炉口四种场景都有对应机型。</p>
+      </article>
+
+      <article class="hcar__slide">
+        <img class="hcar__img" src="img/hero/hero-acoustic.png" alt="FOTRIC AC60 声学成像仪与麦克风阵列"
+             width="288" height="520" loading="lazy" decoding="async" style="--h:clamp(150px,31vh,300px)">
+        <h2 class="t-hero">声学成像仪<br><span class="t-grad">把声音画成图像</span></h2>
+        <p class="t-sub">162 个 MEMS 麦克风阵列。FOTRIC AC60、Fluke ii1020C，气体泄漏、局部放电、气密性检测一眼定位。</p>
+      </article>
+
+      <article class="hcar__slide">
+        <img class="hcar__img" src="img/hero/hero-xrf.png" alt="Niton XL2 手持式 X 射线合金分析仪"
+             width="440" height="520" loading="lazy" decoding="async" style="--h:clamp(150px,29vh,280px)">
+        <h2 class="t-hero">手持合金分析仪<br><span class="t-grad">3 秒读出牌号</span></h2>
+        <p class="t-sub">Thermo Niton XL2 系列手持 XRF，废旧金属分选、PMI 来料检验当场出结果，不用送样。</p>
+      </article>
+
+      <article class="hcar__slide">
+        <img class="hcar__img" src="img/hero/hero-surface.png" alt="WYKO DCM8 光学表面轮廓仪"
+             width="760" height="392" loading="lazy" decoding="async" style="--h:clamp(110px,20vh,196px)">
+        <h2 class="t-hero">光学表面测量<br><span class="t-grad">纳米级轮廓</span></h2>
+        <p class="t-sub">Leica WYKO DCM8 纵向分辨率 0.1nm，粗糙度、台阶高、膜厚一次测完。</p>
+      </article>
+    </div>
+    <div class="hcar__dots" role="tablist" aria-label="切换到指定一屏">
+      <button role="tab" aria-selected="true" aria-label="第 1 屏 品牌主张"></button>
+      <button role="tab" aria-selected="false" aria-label="第 2 屏 红外热像仪"></button>
+      <button role="tab" aria-selected="false" aria-label="第 3 屏 声学成像仪"></button>
+      <button role="tab" aria-selected="false" aria-label="第 4 屏 手持合金分析仪"></button>
+      <button role="tab" aria-selected="false" aria-label="第 5 屏 光学表面测量"></button>
+    </div>
+  </div>
+
+  <!-- CTA 常驻在旋转区外面：主入口不能跟着轮播跑，任何时刻都要能直接点 -->
+  <div class="hero__cta" data-rv>
+    <a class="btn" href="#contact">说需求，帮你配型号</a>
+    <a class="link-arrow" href="#products">看产品分类 <span class="ar">›</span></a>
+  </div>
+
+  <!-- 品牌滚动条：写在 hero 里面 + margin-top:auto，所以它钉在首屏底部，
+       不用往下滚就能看到品牌在走。hero 是 flex 纵向容器，min-height 已经是一屏高。
+       内容复制两份、轨道位移 -50% —— 少了第二份就会滚出空白。 -->
+  <div class="marquee marquee--hero" aria-label="代理与合作品牌">
+    <div class="marquee__track">
+      <span>Fluke 福禄克</span><span>·</span><span>FOTRIC 飞础科</span><span>·</span><span>Leica 徕卡</span><span>·</span><span>Shimadzu 岛津</span><span>·</span><span>Anton Paar 安东帕</span><span>·</span><span>Thermo Fisher 赛默飞</span><span>·</span><span>JEOL 日本电子</span><span>·</span><span>Zeiss 蔡司</span><span>·</span><span>Keysight 是德</span><span>·</span><span>Tektronix 泰克</span><span>·</span>
+      <span>Fluke 福禄克</span><span>·</span><span>FOTRIC 飞础科</span><span>·</span><span>Leica 徕卡</span><span>·</span><span>Shimadzu 岛津</span><span>·</span><span>Anton Paar 安东帕</span><span>·</span><span>Thermo Fisher 赛默飞</span><span>·</span><span>JEOL 日本电子</span><span>·</span><span>Zeiss 蔡司</span><span>·</span><span>Keysight 是德</span><span>·</span><span>Tektronix 泰克</span><span>·</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 产品分类 ============ -->
+<section class="section section--alt" id="products">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="t-eyebrow" data-rv>Products</p>
+      <h2 class="t-title" data-rv>六个主力方向，一次问清</h2>
+      <p class="t-body" data-rv style="margin-top:12px">下面六块是主力方向。完整目录共 16 大类 101 款型号，每款都带说明和画册原图，在产品中心页可以按关键词搜。</p>
+    </div>
+    <!-- 六个方向自动左右轮播：脚本只改 --i（当前起始格），一屏几格完全由 CSS 的 --view 决定。
+         没有 JS / 开了"减少动态效果"时 .gcar 保持静态三列网格，观感和轮播前一致。 -->
+    <div class="gcar" data-carousel data-interval="1500" data-rv aria-label="六个主力方向轮播">
+      <div class="gcar__track">
+        <article class="card"><div class="card__ic" aria-hidden="true">◉</div><h3>红外热成像</h3><p>FOTRIC 2810 / 348L / 248M、Fluke TiX1060 / Ti480U / RSE60、巨哥 MAG-F6、艾睿 G600。</p><a class="link-arrow" href="products.html#cat-thermal">看这类型号 <span class="ar">›</span></a></article>
+        <article class="card"><div class="card__ic" aria-hidden="true">∿</div><h3>声学成像</h3><p>Fluke ii1020C 气体泄漏与局放二合一、FOTRIC AC60 162 麦克风阵列。</p><a class="link-arrow" href="products.html#cat-acoustic">看这类型号 <span class="ar">›</span></a></article>
+        <article class="card"><div class="card__ic" aria-hidden="true">⊙</div><h3>显微观察</h3><p>徕卡 DM4M / DM18M / DCM8 / DVM6、JEOL 台式与场发射电镜、赛默飞 APREO。</p><a class="link-arrow" href="products.html#cat-om">看这类型号 <span class="ar">›</span></a></article>
+        <article class="card"><div class="card__ic" aria-hidden="true">⇅</div><h3>力学性能测试</h3><p>岛津 AGX-V / AG-X / UH-FX 2000KN 万能与液压机、MMT 微力疲劳、安东帕纳米压痕。</p><a class="link-arrow" href="products.html#cat-utm">看这类型号 <span class="ar">›</span></a></article>
+        <article class="card"><div class="card__ic" aria-hidden="true">⬡</div><h3>材料成分分析</h3><p>岛津 XRD-7000 / EDX7000 / EPMA-8050G、安捷伦 5110 ICP-OES、力可碳硫与氧氮氢。</p><a class="link-arrow" href="products.html#cat-metal">看这类型号 <span class="ar">›</span></a></article>
+        <article class="card"><div class="card__ic" aria-hidden="true">▣</div><h3>老化与环境试验</h3><p>氙灯老化、UV 紫外老化、臭氧老化、热老化烘箱，可靠性测试配套。</p><a class="link-arrow" href="products.html#cat-aging">看这类型号 <span class="ar">›</span></a></article>
+      </div>
+      <div class="gcar__nav">
+        <button class="gcar__arrow" data-dir="-1" aria-label="上一批方向">‹</button>
+        <span class="gcar__step" data-step>1 / 2</span>
+        <button class="gcar__arrow" data-dir="1" aria-label="下一批方向">›</button>
+      </div>
+    </div>
+    <!-- 六个方向只是摘要，完整目录在单独一页：这样首页保持轻，101 张图不会被首页拖慢 -->
+    <div class="hero__cta" data-rv style="justify-content:center;margin-top:36px">
+      <a class="btn" href="products.html">进产品中心 · 16 大类 101 款</a>
+      <a class="link-arrow" href="#contact">或者直接问型号 <span class="ar">›</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 数据带 ============ -->
+<section class="section" id="numbers">
+  <div class="wrap">
+    <div class="stats">
+      <div data-rv><div class="stat__num" data-to="29" data-suffix=" 个">0</div><div class="stat__lab">代理 / 合作品牌</div></div>
+      <div data-rv><div class="stat__num" data-to="16" data-suffix=" 大类">0</div><div class="stat__lab">仪器品类覆盖</div></div>
+      <div data-rv><div class="stat__num" data-to="2000" data-suffix="℃">0</div><div class="stat__lab">热成像测温上限</div></div>
+      <div data-rv><div class="stat__num" data-to="0.1" data-dec="1" data-suffix=" nm">0</div><div class="stat__lab">光学表面测量分辨率</div></div>
+    </div>
+
+    <!-- 代理品牌墙：整块用公司画册原图（img/brands.png）。
+         这张不能抠透明底 —— 图里的"代理品牌"标题是黑字，抠完在深色主题下就看不见了，
+         所以给它一块恒定白色的托板，两种主题下都是"白纸贴白墙"，不会出现黑底。 -->
+    <figure class="brands" data-rv>
+      <img src="img/brands.png" width="1597" height="792" loading="lazy" decoding="async"
+           alt="代理品牌墙，画册列出的 15 家：徕卡、岛津、赛默飞、日置、福禄克、安东帕、泰克、ensoTherm、安捷伦、MERKPD、飞础科、布鲁克、蔡司、日立、三丰">
+    </figure>
+  </div>
+</section>
+
+<!-- ============ 实拍画廊 ============ -->
+<section class="section section--alt" id="gallery">
+  <div class="wrap sec-head">
+    <p class="t-eyebrow" data-rv>Gallery</p>
+    <h2 class="t-title" data-rv>仓库实拍，所见即所得</h2>
+  </div>
+  <div class="rail">
+    <div class="rail__item" data-rv><img src="img/thermal.jpg" alt="红外热像仪" style="height:260px;width:100%;object-fit:cover;border-radius:var(--r)" loading="lazy" decoding="async"></div>
+    <div class="rail__item" data-rv><img src="img/microscope.jpg" alt="显微镜系统" style="height:260px;width:100%;object-fit:cover;border-radius:var(--r)" loading="lazy" decoding="async"></div>
+    <div class="rail__item" data-rv><img src="img/tester.jpg" alt="工业测量仪表" style="height:260px;width:100%;object-fit:cover;border-radius:var(--r)" loading="lazy" decoding="async"></div>
+    <div class="rail__item" data-rv><img src="img/chip.jpg" alt="芯片与 PCB" style="height:260px;width:100%;object-fit:cover;border-radius:var(--r)" loading="lazy" decoding="async"></div>
+  </div>
+</section>
+
+<!-- ============ 选型流程 ============ -->
+<section class="section" id="flow">
+  <div class="wrap" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:48px;align-items:start">
+    <div class="sec-head" style="margin:0">
+      <p class="t-eyebrow" data-rv="left">How it works</p>
+      <h2 class="t-title" data-rv="left">不知道型号？<br>说场景就行</h2>
+      <p class="t-body" data-rv="left">测什么参数、预算多少、用在产线还是实验室 —— 这三句话说清楚，我们在多品牌之间帮你配。</p>
+    </div>
+    <div class="tl">
+      <div class="tl__row" data-rv="right"><h4>1. 说清应用场景</h4><p>举例子最快：测炉口温度、查压缩空气漏点、给来料做金相。</p></div>
+      <div class="tl__row" data-rv="right"><h4>2. 出选型方案</h4><p>给 2~3 个档位的机型对比，写清分辨率、量程、精度差在哪。</p></div>
+      <div class="tl__row" data-rv="right"><h4>3. 报价与交期</h4><p>现货当日确认；需要调货的给准确到货时间，不口头承诺。</p></div>
+      <div class="tl__row" data-rv="right"><h4>4. 交付与校准</h4><p>随机附原厂序列号与保修卡，到期校准、维修、耗材后续都接。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 服务承诺（重音分区）============ -->
+<section class="section section--dark" id="service">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="t-eyebrow" data-rv>Service</p>
+      <h2 class="t-title" data-rv>四件事我们写死在合同里</h2>
+    </div>
+    <div class="grid">
+      <article class="card span3" data-rv><h3>正品行货</h3><p>正规授权渠道，带原厂序列号与保修卡，支持官网验真，杜绝水货翻新。</p></article>
+      <article class="card span3" data-rv><h3>选型支持</h3><p>说清测什么参数、什么预算、什么场景，我们在多品牌间挑最合适的型号。</p></article>
+      <article class="card span3" data-rv><h3>售后校准</h3><p>保修期内对接原厂售后，到期校准、维修、耗材更换渠道一并提供。</p></article>
+      <article class="card span3" data-rv><h3>报价快</h3><p>常见机型当天出价格，批量与特殊规格直接打电话，不让你等邮件。</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 联系 ============ -->
+<section class="section" id="contact" style="text-align:center">
+  <div class="wrap">
+    <p class="t-eyebrow" data-rv>Contact</p>
+    <h2 class="t-title" data-rv style="max-width:22ch;margin:0 auto">要报价，直接打电话</h2>
+    <p class="t-hero" data-rv style="margin-top:22px"><span class="t-grad">180-1857-9934</span></p>
+    <p class="t-body" data-rv style="margin-top:14px">上海 · 立足长三角。现货、正品、报价快，售后有人接。</p>
+    <div class="hero__cta" data-rv style="justify-content:center"><a class="btn" href="tel:18018579934">拨号</a><a class="btn btn--ghost" href="#products">再看一眼产品</a></div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__cols">
+      <div><h5>极曜微科技</h5><ul><li>上海极曜微科技有限公司</li><li>工业检测仪器综合供应商</li><li>上海 · 立足长三角</li></ul></div>
+      <div><h5>产品</h5><ul><li><a href="products.html">全部 16 大类 101 款 ›</a></li><li>红外热成像</li><li>声学成像</li><li>显微观察系统</li><li>力学性能测试</li><li>材料成分分析</li></ul></div>
+      <div><h5>服务</h5><ul><li>选型支持</li><li>原厂保修对接</li><li>到期校准与维修</li><li>耗材供应</li></ul></div>
+      <div><h5>联系</h5><ul><li>销售热线 180-1857-9934</li><li>工作时间 周一至周六</li></ul></div>
+    </div>
+    <p class="footer__note">
+      页面说明：此处仅用于说明经营范围。
+      正式上线前请补齐：ICP 备案号、授权书证明页。主体名称已按营业执照写为「上海极曜微科技有限公司」。
+    </p>
+  </div>
+</footer>
+
+<script src="js/reveal.js"></script>
+<script src="js/parallax.js"></script>
+<script src="js/counter.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/menu.js"></script>    <!-- 必须紧跟 nav.js：nav.js 会跳过带 data-menu 的栏目，两个脚本才不打架 -->
+<script src="js/hover.js"></script>
+<script src="js/carousel.js"></script> <!-- 自动轮播：只往容器上写 --i，视觉全在 css/carousel.css -->
+</body>
+</html>

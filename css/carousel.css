@@ -1,0 +1,116 @@
+/* ============================================================
+   carousel.css —— 两个自动左右轮播的视觉层
+   ------------------------------------------------------------
+   职责：只写"长什么样、怎么动"。脚本一个数都不写样式，
+   只往容器上塞 --i（当前起始格 / 当前屏），所有位移都从这里算出来。
+   挂载标记是 data-carousel，不要轮播就把 js/carousel.js 的 <script> 删掉，
+   本文件会自动退回静态版式（下面每个选择器都配了 :not(.is-run) 的回退）。
+   ============================================================ */
+
+/* ---------- 0. 一页两处共用的节奏令牌 ---------- */
+[data-carousel]{
+  --car-gap:20px;                       /* 卡片之间的缝，位移公式里要用同一个数 */
+  --car-dur:.72s;
+  --car-clone:1;                        /* 末尾补几格克隆：等于最宽时一屏能放几格，见第 2 节 */
+}
+
+/* ============ 1. 首屏：标题 + 产品图整组替换 ============ */
+.hcar{width:100%;max-width:var(--maxw);margin-top:26px}
+.hcar__stage{
+  position:relative;
+  display:flex;
+  /* 整组左右滑：只把 --i 换算成位移，每屏共用一条过渡曲线。
+     100% 在这里 = stage 自己的宽度 = 一屏宽，所以每翻一屏正好走一格。 */
+  transform:translateX(calc(var(--i,0) * -100%));
+  transition:transform var(--car-dur) var(--ease);
+  will-change:transform;
+}
+.hcar__slide{
+  flex:0 0 100%;                        /* 一屏占满，不随内容收缩 */
+  min-width:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;gap:6px;
+  padding:0 4px;
+}
+.hcar__img{
+  display:block;
+  width:auto;height:auto;               /* 交给下面的上限去缩，比例由图片自身决定 */
+  max-height:var(--h,260px);
+  max-width:min(100%,560px);
+  object-fit:contain;
+  margin-bottom:10px;
+  filter:drop-shadow(0 18px 30px rgba(10,13,18,.16)); /* 抠图是透明的，用投影把它"垫"在台面上 */
+}
+/* 带产品图的屏：标题收一号，否则图和大标题会抢首屏。
+   品牌主张屏排除在外，它没有图，直接吃 base.css 的原始字号（就是改造前主视觉的大小）。 */
+.hcar__slide:not(.hcar__slide--brand) .t-hero{font-size:clamp(30px,5.4vw,68px)}
+.hcar__slide:not(.hcar__slide--brand) .t-sub{max-width:46ch;margin-top:10px;font-size:clamp(15px,1.7vw,19px)}
+.hcar__slide--brand .t-sub{max-width:44ch;margin-top:18px} /* 只补回原来那两个宽度/间距，字号沿用 base.css */
+
+/* 圆点：当前屏拉长，不靠颜色区分，深色主题下同样读得出来 */
+.hcar__dots{display:flex;gap:9px;justify-content:center;margin-top:22px}
+.hcar__dots button{
+  width:8px;height:8px;padding:0;border-radius:980px;
+  background:var(--ink-3);opacity:.35;
+  transition:opacity .3s var(--ease),width .3s var(--ease);
+}
+.hcar__dots button:hover{opacity:.7}
+.hcar__dots button[aria-selected="true"]{opacity:1;width:26px;background:var(--accent)}
+
+/* 回退：脚本没跑（或系统要求减少动态）时，只留第一屏，圆点没有意义就藏掉 */
+[data-carousel]:not(.is-run) .hcar__slide:not(:first-child){display:none}
+[data-carousel]:not(.is-run) .hcar__stage{transform:none;transition:none}
+[data-carousel]:not(.is-run) .hcar__dots{display:none}
+
+/* ============ 2. 六个主力方向：卡片整批左右轮播 ============
+   静态回退先写：这就是改造前的三列网格，一处重写都没有。 */
+.gcar{display:grid;gap:var(--car-gap);grid-template-columns:repeat(3,1fr)}
+.gcar__track{display:contents}          /* 未启用轮播时让卡片直接落进上面的网格 */
+.gcar__nav{display:none}
+@media (max-width:900px){ .gcar{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:620px){ .gcar{grid-template-columns:1fr} }
+
+/* 启用轮播：容器改成"一条裁宽的轨道"，一屏放几格由 --view 说了算。
+   注意 --view 和上面的媒体查询断点必须一起改，否则一格会露半张。 */
+.gcar.is-run{display:block;overflow:hidden;--view:3;--car-clone:3} /* --car-clone 跟最宽那档的 --view 一致，脚本按它补克隆格 */
+.gcar.is-run .gcar__track{
+  display:flex;gap:var(--car-gap);
+  /* 一格宽 = (100% - 缝) / view；翻一格就走 -(一格宽 + 一条缝) */
+  transform:translateX(calc(var(--i,0) * -1 * (100% + var(--car-gap)) / var(--view)));
+  transition:transform var(--car-dur) var(--ease);
+}
+.gcar.is-run .gcar__track .card{
+  flex:0 0 calc((100% - (var(--view) - 1) * var(--car-gap)) / var(--view));
+  min-width:0;
+}
+@media (max-width:900px){ .gcar.is-run{--view:2} }
+@media (max-width:620px){ .gcar.is-run{--view:1} }
+
+/* 手动左右按钮：自动轮播之外给人一个不等倒计时的入口。
+   display 只在 .is-run 下打开 —— 没有脚本时这行不生效，按钮连同上面的 .gcar__nav{display:none} 一起消失。 */
+.gcar__nav{align-items:center;gap:12px;justify-content:center;margin-top:24px}
+.gcar.is-run .gcar__nav{display:flex}
+.gcar__arrow{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--bg);border:1px solid var(--line);
+  color:var(--ink-2);font-size:19px;line-height:1;
+  display:grid;place-items:center;
+  transition:transform .2s var(--ease),color .2s,box-shadow .2s;
+}
+.gcar__arrow:hover{color:var(--ink);box-shadow:var(--sh-1);transform:translateY(-1px)}
+.gcar__step{font-size:12px;color:var(--ink-3);min-width:44px;text-align:center;font-variant-numeric:tabular-nums}
+
+/* ---------- 3. 悬停/聚焦暂停时给一点反馈 ---------- */
+[data-carousel].is-paused .hcar__stage,
+[data-carousel].is-paused .gcar__track{transition-duration:.28s} /* 手动的短，自动的长：手感上分得出来 */
+
+/* ---------- 4. 减少动态效果：把过渡整个掐掉，位置也归零 ---------- */
+@media (prefers-reduced-motion:reduce){
+  .hcar__stage,.gcar.is-run .gcar__track{transform:none!important;transition:none!important}
+  .gcar{display:grid!important;overflow:visible!important}
+  .gcar__track{display:contents!important}
+  .gcar__nav{display:none!important}
+  .hcar__slide{display:none}
+  .hcar__slide:first-child{display:flex}
+  .hcar__dots{display:none}
+}

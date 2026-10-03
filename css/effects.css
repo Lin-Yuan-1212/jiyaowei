@@ -1,0 +1,87 @@
+/* ============================================================
+   effects.css —— 动效层
+   职责：只写"怎么动"。所有渐显类规则都以 .js-ready 为前提 ——
+   万一 js/ 里的脚本出错或被拦截，元素不会被永久藏成透明，
+   页面退化成"没有动画但内容完整"。这个保险务必保留。
+   ============================================================ */
+
+/* ---------- 1. 滚动渐显 ---------- */
+.js-ready [data-rv]{opacity:0;transform:translateY(24px)}          /* 初始态：透明 + 下沉 24px */
+.js-ready [data-rv].is-in{                                         /* 进入视口后由 js/reveal.js 加类 */
+  opacity:1;transform:none;
+  transition:opacity .7s ease var(--rd,0ms),transform .7s var(--ease) var(--rd,0ms);
+}
+/* 变体：只淡出不滑动（适合图片、色块这类本身有体积的元素） */
+.js-ready [data-rv="fade"].is-in{transform:none}
+/* 变体：从左右两侧滑入（做对比排版很好用） */
+.js-ready [data-rv="left"]{transform:translateX(-28px)}
+.js-ready [data-rv="right"]{transform:translateX(28px)}
+
+/* ---------- 2. 导航滚动态 ---------- */
+.nav{transition:background-color .35s var(--ease),border-color .35s var(--ease),backdrop-filter .35s}
+.nav.is-stuck{
+  background:color-mix(in srgb,var(--bg) 72%,transparent); /* 半透明底：让内容透出来一点 */
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  backdrop-filter:saturate(180%) blur(20px);               /* 模糊 + 提饱和 = 毛玻璃；saturate 是关键，只 blur 会发灰 */
+  border-bottom-color:var(--line);
+}
+@supports not (backdrop-filter:blur(1px)){ .nav.is-stuck{background:var(--bg)} } /* 不支持毛玻璃就退回实色 */
+
+/* ---------- 3. Hero 光晕背景 ----------
+   手法：绝对定位的大圆 + radial-gradient + 高斯模糊，纯 CSS，零图片。
+   想换氛围只改颜色和 width。 */
+.orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;pointer-events:none} /* pointer-events:none：光晕不能挡住下面的按钮 */
+.orb--1{width:520px;height:520px;left:-120px;top:-80px;background:radial-gradient(circle,#0071e3,transparent 65%)}
+.orb--2{width:460px;height:460px;right:-100px;top:12%;background:radial-gradient(circle,#bf5af2,transparent 65%)}
+.orb--3{width:600px;height:600px;left:35%;bottom:-260px;background:radial-gradient(circle,#5e5ce6,transparent 65%)}
+.js-ready .orb{animation:float 18s ease-in-out infinite alternate} /* 缓慢漂移，让静态页面"活着" */
+.js-ready .orb--2{animation-duration:24s;animation-delay:-6s}      /* 各层时长不同，才不会整齐得像 PPT */
+.js-ready .orb--3{animation-duration:30s;animation-delay:-12s}
+@keyframes float{
+  from{transform:translate3d(0,0,0) scale(1)}
+  to{transform:translate3d(40px,-50px,0) scale(1.12)}
+}
+
+/* ---------- 4. 卡片悬浮：抬升 + 阴影 + 鼠标跟随高光 ---------- */
+.card,.plan,.tl__row{transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-color .4s}
+.card:hover,.plan:hover{transform:translateY(-6px);box-shadow:var(--sh-2);border-color:color-mix(in srgb,var(--accent) 30%,var(--line))}
+/* ::after 铺一层跟随鼠标的柔光。--mx/--my 由 js 写入（百分比），默认值保证没 JS 时居中 */
+.card::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(320px circle at var(--mx,50%) var(--my,0%),color-mix(in srgb,var(--accent) 14%,transparent),transparent 60%);
+  opacity:0;transition:opacity .35s var(--ease);
+}
+.card:hover::after{opacity:1}
+
+/* ---------- 5. 视差带：由 JS 写入 --p（0→1 进度），CSS 只负责换算 ---------- */
+.band__layer--back{transform:translateY(calc(var(--p,0) * -60px)) scale(calc(1 + var(--p,0) * .08))}
+.band__layer--mid{transform:translateY(calc(var(--p,0) * -140px));opacity:calc(1 - var(--p,0) * .9)} /* 越滚越远越淡 */
+.band__layer--front{transform:translateY(calc((1 - var(--p,0)) * 60px));opacity:var(--p,0)}           /* 反向：滚得越多越清晰 */
+.band__title{font-size:clamp(30px,6vw,72px);font-weight:700;line-height:1.05}
+
+/* ---------- 6. 跑马灯：两份相同内容 + 位移 50%，无缝循环 ---------- */
+.marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+/* 两端渐隐用 mask 而不是硬切，视觉更高级 */
+.marquee__track{display:flex;width:max-content;gap:44px}
+.js-ready .marquee__track{animation:slide 26s linear infinite}
+.marquee:hover .marquee__track{animation-play-state:paused}   /* 悬停即停，方便读 */
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}} /* 只走一半：因为内容复制了一份 */
+.marquee__track span{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+
+/* ---------- 7. 数字计数器的等宽防抖 ---------- */
+.stat__num{transition:color .4s}
+.is-in .stat__num{color:var(--ink)}
+
+/* ---------- 8. 主题切换按钮的小动效 ---------- */
+.theme-btn{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--bg-2);border:1px solid var(--line);transition:transform .35s var(--ease),background-color .35s}
+.theme-btn:hover{transform:rotate(18deg) scale(1.06)}
+
+/* ---------- 9. 无障碍降级：系统开了"减少动态效果"就全部关掉 ----------
+   这不是可选项。晕动症用户看到大面积位移和视差会真的难受。 */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .js-ready [data-rv]{opacity:1!important;transform:none!important}  /* 内容必须直接可见 */
+  .orb,.js-ready .orb{animation:none!important}
+  .band__layer--back,.band__layer--mid,.band__layer--front{transform:none!important;opacity:1!important}
+}

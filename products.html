@@ -1,0 +1,1957 @@
+<!DOCTYPE html>
+<!--
+  极曜微科技 · 产品中心（16 大类 / 101 款）
+  ------------------------------------------------------------
+  本页内容与图片全部取自 E:\网页\2026上海极曜微科技有限公司V1.0_0802.pdf（公司 2026 版产品画册），
+  由 jiyao_tools/render-products.mjs 从 catalog.json 一次性生成，改产品请改 catalog.json 后重新生成，
+  不要在 HTML 里手改（会被下次生成覆盖）。
+  样式复用首页那套令牌：base.css / layout.css / effects.css / menu.css，
+  本页只多两个文件：
+    css/products.css  目录页特有的卡片、吸顶筛选条
+    js/products.js    关键词搜索 + 分类跳转（分类跳转要减掉筛选条高度，所以没用 nav.js 的通用锚点）
+  顶部导航（含六个悬停展开的面板）不在这页手写，生成时整段从 index.html 搬过来，两页共用一份。
+  图片在 img/products-studio/（画册原图套影棚模板的成品，没处理到的自动回退 img/products/）。
+-->
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>产品中心 · 16 大类 101 款检测仪器 | 极曜微科技</title>
+<meta name="description" content="上海极曜微科技有限公司产品目录：红外热像、声学成像、电子与光学显微、万能与疲劳试验机、金属元素分析、材料力学与流变、环境老化、热分析、半导体检测共 101 款型号与说明，福禄克/飞础科/徕卡/岛津/安东帕等 29 个品牌。">
+<link rel="icon" type="image/png" href="img/logo-mark.png">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/effects.css">
+<link rel="stylesheet" href="css/products.css">
+<link rel="stylesheet" href="css/menu.css">     <!-- 导航要和首页长得一样，下拉面板这套就得带上 -->
+</head>
+<body>
+
+<!-- ============ 导航 ============
+     整段由 sharedNav() 从 index.html 搬过来，和首页一模一样（悬停展开面板 + 产品中心胶囊）。
+     当前页标记用 aria-current="page"，不用 .is-active：
+     js/nav.js 的滚动高亮会把所有 .is-active 抢走（它只认本页的 section id）。 -->
+<header class="nav">
+  <div class="nav__inner">
+    <a class="nav__logo" href="index.html"><img class="nav__mark" src="img/logo-mark.png" alt="" width="282" height="262">极曜微科技</a>
+    <nav class="nav__links">
+      <a href="index.html#overview" data-menu="overview" aria-expanded="false" aria-controls="menu-overview" aria-haspopup="true">概览<span class="caret" aria-hidden="true">▾</span></a>
+      <a href="index.html#products" data-menu="products" aria-expanded="false" aria-controls="menu-products" aria-haspopup="true">产品<span class="caret" aria-hidden="true">▾</span></a>
+      <a href="index.html#numbers" data-menu="numbers" aria-expanded="false" aria-controls="menu-numbers" aria-haspopup="true">数据<span class="caret" aria-hidden="true">▾</span></a>
+      <a href="index.html#gallery" data-menu="gallery" aria-expanded="false" aria-controls="menu-gallery" aria-haspopup="true">实拍<span class="caret" aria-hidden="true">▾</span></a>
+      <a href="index.html#service" data-menu="service" aria-expanded="false" aria-controls="menu-service" aria-haspopup="true">服务<span class="caret" aria-hidden="true">▾</span></a>
+    </nav>
+    <div class="nav__tools">
+      <button class="theme-btn" type="button" aria-label="切换主题">☀</button>
+      <!-- 产品中心是全站最常去的一页，导航又是"悬停展开面板"的设计（点栏目本身只开面板、不跳转），
+           所以入口必须单独做成一个能直接点的胶囊，滚到任何一个位置都能一键进去。 -->
+      <a class="btn btn--ghost nav__enter" aria-current="page" href="#top" style="padding:7px 16px;font-size:14px">产品中心</a>
+      <a class="btn btn--ghost nav__quote" href="index.html#contact" style="padding:7px 16px;font-size:14px">要报价</a>
+      <button class="nav__burger" type="button" data-menu="all" aria-label="打开菜单" aria-expanded="false" aria-controls="menu-all"><i></i></button>
+    </div>
+  </div>
+</header>
+
+<!-- 整页压暗 + 磨砂，靠 backdrop-filter 糊掉导航以下的全部内容。
+     z-index 40 低于导航(50)和面板(51)，所以只有"背景"被糊，导航和面板自己保持清晰。 -->
+<div class="menu-scrim" aria-hidden="true"></div>
+
+<!-- ============ 六个下拉面板 ============
+     写在 </header> 外面、和导航做兄弟节点，不能写进 .nav 里：
+     .nav.is-stuck 有 backdrop-filter，它会变成 fixed 后代的包含块，
+     窄屏那条 top:var(--nav-h);bottom:0 会被算成零高度。细节见 css/menu.css 头部注释。 -->
+
+<div class="menu" id="menu-overview" aria-hidden="true">
+  <div class="menu__inner">
+    <div class="menu__cols">
+      <div>
+        <p class="menu__tit">极曜微科技</p>
+        <a class="menu__item" href="index.html#overview">多品牌仪器一站式选型<span>红外热像、声学成像、显微观察、材料分析、力学测试</span></a>
+        <a class="menu__item" href="index.html#numbers">29 个品牌 / 16 大类<span>正规授权渠道，原厂序列号可验真</span></a>
+        <a class="menu__item" href="index.html#contact">上海 · 立足长三角<span>现货、报价快，售后有人接</span></a>
+      </div>
+      <div>
+        <p class="menu__tit">怎么开始</p>
+        <a class="menu__item" href="index.html#flow">不知道型号，说场景就行<span>测什么参数、预算多少、产线还是实验室</span></a>
+        <a class="menu__item" href="#top">完整产品目录<span>16 大类 101 款，型号与说明均可查</span></a>
+        <a class="menu__item" href="index.html#gallery">看仓库实拍<span>所见即所得，四张实拍图</span></a>
+      </div>
+      <div>
+        <p class="menu__tit">重点看这里</p>
+        <a class="menu__item" href="index.html#overview">滚动产品展示带<span>往下滚，四类主力机型一帧一帧推给你看</span></a>
+        <a class="menu__item" href="index.html#service">四项服务承诺<span>正品 / 选型 / 校准 / 报价，写在合同里</span></a>
+        <a class="menu__item" href="index.html#contact">直接要报价<span>180-1857-9934，常见机型当天出价</span></a>
+      </div>
+    </div>
+    <div class="menu__foot">
+      <p class="t-fine">页面说明：此处仅用于说明经营范围，正式上线前请补齐营业执照主体名称与 ICP 备案号。</p>
+      <a class="link-arrow" href="#top">进产品中心 <span class="ar">›</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="menu" id="menu-products" aria-hidden="true">
+  <div class="menu__inner">
+    <div class="menu__cols">
+      <div>
+        <p class="menu__tit">热像与声学</p>
+        <a class="menu__item" href="#cat-thermal">红外热成像<span>FOTRIC 2810 / 348L、Fluke TiX1060 / Ti480U、巨哥 MAG-F6</span></a>
+        <a class="menu__item" href="#cat-acoustic">声学成像<span>Fluke ii1020C 泄漏与局放二合一、FOTRIC AC60 阵列</span></a>
+      </div>
+      <div>
+        <p class="menu__tit">显微与材料</p>
+        <a class="menu__item" href="#cat-om">显微观察系统<span>徕卡 DM4M / DM18M / DCM8 / DVM6、JEOL 电镜</span></a>
+        <a class="menu__item" href="#cat-metal">材料成分分析<span>岛津 XRD-7000 / EDX7000 / EPMA-8050G、力可碳硫</span></a>
+        <a class="menu__item" href="#cat-utm">力学性能测试<span>岛津 AGX-V / UH-FX 2000KN、安东帕纳米压痕</span></a>
+      </div>
+      <div>
+        <p class="menu__tit">测量与试验</p>
+        <a class="menu__item" href="#cat-electrical">电参数与现场测量<span>福禄克全系万用表、钳形表、绝缘电阻、电能质量</span></a>
+        <a class="menu__item" href="#cat-aging">老化与环境试验<span>氙灯、UV 紫外、臭氧、热老化烘箱</span></a>
+        <a class="menu__item" href="#cat-semi">半导体 / PCB<span>来料检验、板卡故障定位、焊接质量评估</span></a>
+      </div>
+    </div>
+    <div class="menu__foot">
+      <p class="t-fine">上面八块点进去直接落到对应分类；完整目录 16 大类 101 款，带型号与画册原图。</p>
+      <a class="link-arrow" href="#top">进产品中心 <span class="ar">›</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="menu" id="menu-numbers" aria-hidden="true">
+  <div class="menu__inner">
+    <div class="menu__cols">
+      <div>
+        <p class="menu__tit">规模</p>
+        <a class="menu__item" href="index.html#numbers">29 个品牌<span>代理与合作品牌，跨品牌帮你选型</span></a>
+        <a class="menu__item" href="#top">16 大类品类<span>从热成像到环境试验全覆盖，明细在产品中心页</span></a>
+      </div>
+      <div>
+        <p class="menu__tit">能力</p>
+        <a class="menu__item" href="index.html#numbers">-40℃ ~ +2000℃<span>热成像测温范围，炉口高温有对应机型</span></a>
+        <a class="menu__item" href="index.html#numbers">0.1 nm<span>光学表面测量纵向分辨率（徕卡 DCM8）</span></a>
+      </div>
+      <div>
+        <p class="menu__tit">交付</p>
+        <a class="menu__item" href="index.html#service">原厂序列号与保修卡<span>支持官网验真，杜绝水货翻新</span></a>
+        <a class="menu__item" href="index.html#flow">四步选型流程<span>说场景 → 出方案 → 报价交期 → 交付校准</span></a>
+      </div>
+    </div>
+    <div class="menu__foot">
+      <p class="t-fine">上面这几个数都是本页数据带里的口径，没有另算一套。</p>
+      <a class="link-arrow" href="index.html#numbers">看数据带 <span class="ar">›</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="menu" id="menu-gallery" aria-hidden="true">
+  <div class="menu__inner">
+    <div class="menu__cols">
+      <div>
+        <p class="menu__tit">热像与显微</p>
+        <a class="menu__item" href="index.html#gallery">红外热像仪<span>手持与在线机型</span></a>
+        <a class="menu__item" href="index.html#gallery">显微镜系统<span>金相与电镜</span></a>
+      </div>
+      <div>
+        <p class="menu__tit">测量与板级</p>
+        <a class="menu__item" href="index.html#gallery">工业测量仪表<span>万用表、钳形表、绝缘测试</span></a>
+        <a class="menu__item" href="index.html#gallery">半导体与 PCB<span>芯片级失效分析</span></a>
+      </div>
+      <div>
+        <p class="menu__tit">怎么用</p>
+        <a class="menu__item" href="index.html#overview">滚动展示带<span>同样的四张图，往下滚一帧一帧推</span></a>
+        <a class="menu__item" href="index.html#contact">实地看机<span>提前打电话约，别白跑</span></a>
+      </div>
+    </div>
+    <div class="menu__foot">
+      <p class="t-fine">实拍横排可以左右拖动；图片是原始尺寸，还没做响应式裁切。</p>
+      <a class="link-arrow" href="index.html#gallery">看实拍 <span class="ar">›</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="menu" id="menu-service" aria-hidden="true">
+  <div class="menu__inner">
+    <div class="menu__cols">
+      <div>
+        <p class="menu__tit">正品与选型</p>
+        <a class="menu__item" href="index.html#service">正品行货<span>正规授权，序列号保修卡齐全</span></a>
+        <a class="menu__item" href="index.html#service">选型支持<span>多品牌之间挑最合适的型号</span></a>
+      </div>
+      <div>
+        <p class="menu__tit">售后与报价</p>
+        <a class="menu__item" href="index.html#service">售后校准<span>保修期内对接原厂，到期校准维修</span></a>
+        <a class="menu__item" href="index.html#service">报价快<span>常见机型当天出价，不等邮件</span></a>
+      </div>
+      <div>
+        <p class="menu__tit">联系</p>
+        <a class="menu__item" href="tel:18018579934">180-1857-9934<span>销售热线，批量与特殊规格直接打电话</span></a>
+        <a class="menu__item" href="index.html#contact">周一至周六<span>工作时间来电优先处理</span></a>
+      </div>
+    </div>
+    <div class="menu__foot">
+      <p class="t-fine">正式上线前请补齐：授权书证明页。</p>
+      <a class="link-arrow" href="index.html#service">看承诺 <span class="ar">›</span></a>
+    </div>
+  </div>
+</div>
+
+<!-- 窄屏专用：汉堡按钮展开的整屏菜单，只放栏目级入口，不做多列 -->
+<div class="menu" id="menu-all" aria-hidden="true">
+  <div class="menu__inner">
+    <div class="menu__cols">
+      <div>
+        <a class="menu__item" href="index.html#overview">概览<span>多品牌仪器一站式选型</span></a>
+        <a class="menu__item" href="#top">产品中心<span>16 大类 101 款完整目录</span></a>
+        <a class="menu__item" href="index.html#numbers">数据<span>29 个品牌 / 16 大类</span></a>
+        <a class="menu__item" href="index.html#gallery">实拍<span>仓库实拍，所见即所得</span></a>
+        <a class="menu__item" href="index.html#flow">流程<span>不知道型号，说场景就行</span></a>
+        <a class="menu__item" href="index.html#service">服务<span>四项承诺写死在合同里</span></a>
+        <a class="menu__item" href="tel:18018579934">180-1857-9934<span>要报价，直接打电话</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<main id="top">
+
+<!-- ============ 页头 ============ -->
+<section class="section pc-top">
+  <div class="wrap">
+    <p class="t-eyebrow" data-rv>Product Catalog · 2026</p>
+    <h1 class="t-title" data-rv style="max-width:24ch">16 大类 <span class="t-grad">101 款</span>在售型号</h1>
+    <p class="t-body" data-rv style="margin-top:14px;max-width:62ch">
+      型号、品牌与说明全部取自公司 2026 版产品画册，图片为画册原图（已压缩到网页尺寸）。
+      不确定该用哪一台？把测量对象和量程说清楚，我们在 29 个品牌之间帮你配。
+    </p>
+    <div class="hero__cta" data-rv style="justify-content:flex-start">
+      <a class="btn" href="tel:18018579934">直接来电 180-1857-9934</a>
+      <a class="link-arrow" href="index.html">回品牌页 <span class="ar">›</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 吸顶筛选条 ============
+     sticky 的 top 用 --nav-h，正好贴在吸顶导航下面；
+     分类按钮是 <button> 不是 <a>，因为跳转要额外减掉这条的高度，通用锚点脚本不知道它存在。 -->
+<div class="pbar">
+  <div class="pbar__in">
+    <label class="psearch">
+      <input id="pc-q" type="search" placeholder="搜型号 / 品牌 / 关键词，例如 348L、岛津、氙灯老化" aria-label="在产品目录里搜索">
+    </label>
+    <span class="pbar__n" id="pc-n">共 101 款</span>
+    <div class="chips" role="group" aria-label="按分类跳转">
+        <button class="chip" type="button" data-jump="cat-thermal">红外热成像仪测温系统<b>8</b></button>
+        <button class="chip" type="button" data-jump="cat-acoustic">声学成像仪检测系统<b>3</b></button>
+        <button class="chip" type="button" data-jump="cat-electrical">电气测量仪器<b>3</b></button>
+        <button class="chip" type="button" data-jump="cat-em">电子显微系统<b>4</b></button>
+        <button class="chip" type="button" data-jump="cat-om">光学显微系统<b>12</b></button>
+        <button class="chip" type="button" data-jump="cat-surface">表面机械特性表征<b>6</b></button>
+        <button class="chip" type="button" data-jump="cat-utm">万能材料试验机<b>2</b></button>
+        <button class="chip" type="button" data-jump="cat-fatigue">疲劳试验机<b>5</b></button>
+        <button class="chip" type="button" data-jump="cat-metal">金属元素分析<b>9</b></button>
+        <button class="chip" type="button" data-jump="cat-metalmec">金属材料机械性能表征<b>7</b></button>
+        <button class="chip" type="button" data-jump="cat-polymer">高分子材料物性表征<b>16</b></button>
+        <button class="chip" type="button" data-jump="cat-rheology">高分子材料流变性能表征<b>5</b></button>
+        <button class="chip" type="button" data-jump="cat-aging">高分子材料耐环境可靠性评价<b>4</b></button>
+        <button class="chip" type="button" data-jump="cat-thermal-analysis">高分子材料热分析系统<b>6</b></button>
+        <button class="chip" type="button" data-jump="cat-semi">半导体 / PCB / 电子材料检测<b>10</b></button>
+        <button class="chip" type="button" data-jump="cat-pd">高压局放监测<b>1</b></button>
+    </div>
+  </div>
+</div>
+
+    <section class="section cat" id="cat-thermal">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="t-eyebrow" data-rv>01 · Infrared Thermal Imager</p>
+          <h2 class="t-title" data-rv>红外热成像仪测温系统<span class="cat-n">8 款</span></h2>
+          <p class="t-body" data-rv style="margin-top:12px">从手持式热像仪到在线式中波/短波热像仪，覆盖研发、质检、过程控制与状态监测的完整测温方案。</p>
+        </div>
+        <div class="grid">
+      <article class="card pcard" data-rv="fade" data-kw="fotric 348l 手持式热像仪 fotric 飞础科 红外热成像仪测温系统 infrared thermal imager 热像探测器物理像素 640×480，温度灵敏度 netd &lt;25mk@30℃ 测温范围 -20℃~+650℃，支持 1200℃ 高温扩展 不少于 20 个可移动点、20 个可移动区域、20 条可移动直线分析，支持区域发射率 usb 传输全辐射热像视频流，hdmi 输出非辐射热像视频流 可配置显微镜镜头，点分辨率不高于 50μm；复合调色聚焦成像与高温差均衡成像 专业分析软件：最多 10 窗口同步测试，录制全辐射视频流，单文件存储深度达 1tb 支持超温/低温/极差值三种在线报警，温升曲线可叠加对比并导入 excel 二次分析">
+        <div class="pc-img"><img src="img/products-studio/p05-1.jpg" alt="FOTRIC 348L 手持式热像仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>手持式热像仪</h3>
+          <p class="pc-model">FOTRIC 348L</p>
+          <p class="pc-brand">FOTRIC 飞础科</p>
+          <ul class="pc-specs">
+            <li>热像探测器物理像素 640×480，温度灵敏度 NETD &lt;25mK@30℃</li>
+            <li>测温范围 -20℃~+650℃，支持 1200℃ 高温扩展</li>
+            <li>不少于 20 个可移动点、20 个可移动区域、20 条可移动直线分析，支持区域发射率</li>
+            <li>USB 传输全辐射热像视频流，HDMI 输出非辐射热像视频流</li>
+            <li>可配置显微镜镜头，点分辨率不高于 50μm；复合调色聚焦成像与高温差均衡成像</li>
+            <li>专业分析软件：最多 10 窗口同步测试，录制全辐射视频流，单文件存储深度达 1TB</li>
+            <li>支持超温/低温/极差值三种在线报警，温升曲线可叠加对比并导入 Excel 二次分析</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P05</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="fotric 248m 专家级红外热像仪 fotric 飞础科 红外热成像仪测温系统 infrared thermal imager 红外分辨率 640×480，最小成像距离 0.1m，微距镜头分辨率 50μm 测温范围 -20℃~650℃（-20℃~150℃、0~650℃ 双量程） 支持 30hz 全辐射流，观测距离 50mm 研发测试台安装：2 个 1/4-unc-20 标准安装孔，支持底部、顶部安装 标配 30° 标准镜头与 50μm 微距镜头，满足研发、质检、监测需求 内置测量范围计算器：最大测量范围、像素解析度、测量镜头、测试距离">
+        <div class="pc-img"><img src="img/products-studio/p05-1.jpg" alt="FOTRIC 248M 专家级红外热像仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>专家级红外热像仪</h3>
+          <p class="pc-model">FOTRIC 248M</p>
+          <p class="pc-brand">FOTRIC 飞础科</p>
+          <ul class="pc-specs">
+            <li>红外分辨率 640×480，最小成像距离 0.1m，微距镜头分辨率 50μm</li>
+            <li>测温范围 -20℃~650℃（-20℃~150℃、0~650℃ 双量程）</li>
+            <li>支持 30Hz 全辐射流，观测距离 50mm</li>
+            <li>研发测试台安装：2 个 1/4-UNC-20 标准安装孔，支持底部、顶部安装</li>
+            <li>标配 30° 标准镜头与 50μm 微距镜头，满足研发、质检、监测需求</li>
+            <li>内置测量范围计算器：最大测量范围、像素解析度、测量镜头、测试距离</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P05</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="fluke ti480u 手持式热像仪 fluke 福禄克 红外热成像仪测温系统 infrared thermal imager 640×480 红外像素，支持 1280×640 超分辨率 最高 60hz 帧频，流畅观测升/降温过程，边走边测不卡顿 180° 可旋转镜头，观测角度随时调整；5.5 英寸 oled 触摸屏 锂电池支持 &gt;3.5 小时续航，户外测试无压力 工业运维：二维码识别设备、归类测试数据、gps 定位标记 实验研发：录制全红外视频流+数据流，可用 smartview ir 二次分析 最高温支持 1200℃">
+        <div class="pc-img"><img src="img/products-studio/p06-1.jpg" alt="FLUKE Ti480U 手持式热像仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>手持式热像仪</h3>
+          <p class="pc-model">FLUKE Ti480U</p>
+          <p class="pc-brand">FLUKE 福禄克</p>
+          <ul class="pc-specs">
+            <li>640×480 红外像素，支持 1280×640 超分辨率</li>
+            <li>最高 60Hz 帧频，流畅观测升/降温过程，边走边测不卡顿</li>
+            <li>180° 可旋转镜头，观测角度随时调整；5.5 英寸 OLED 触摸屏</li>
+            <li>锂电池支持 &gt;3.5 小时续航，户外测试无压力</li>
+            <li>工业运维：二维码识别设备、归类测试数据、GPS 定位标记</li>
+            <li>实验研发：录制全红外视频流+数据流，可用 SmartView IR 二次分析</li>
+            <li>最高温支持 1200℃</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P06</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="fluke rse60 在线式热像仪 fluke 福禄克 红外热成像仪测温系统 infrared thermal imager 分辨率 640×480，自动对焦系统锁定测试目标 30hz 帧频，1.8mb 带宽视频输出 测温量程最大 -20℃~2000℃ rs-485 串口控制信号输出与系统接入，完成组网 铁红、黑白、彩虹等 10 种调色板，广角/长焦等多种镜头可选 smartview ir 电脑软件，搭配 sdk 实现更多工业视觉测试功能">
+        <div class="pc-img"><img src="img/products-studio/p06-1.jpg" alt="FLUKE RSE60 在线式热像仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>在线式热像仪</h3>
+          <p class="pc-model">FLUKE RSE60</p>
+          <p class="pc-brand">FLUKE 福禄克</p>
+          <ul class="pc-specs">
+            <li>分辨率 640×480，自动对焦系统锁定测试目标</li>
+            <li>30Hz 帧频，1.8Mb 带宽视频输出</li>
+            <li>测温量程最大 -20℃~2000℃</li>
+            <li>RS-485 串口控制信号输出与系统接入，完成组网</li>
+            <li>铁红、黑白、彩虹等 10 种调色板，广角/长焦等多种镜头可选</li>
+            <li>SmartView IR 电脑软件，搭配 SDK 实现更多工业视觉测试功能</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P06</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="fluke tix1060 大师级红外热像仪 fluke 福禄克 红外热成像仪测温系统 infrared thermal imager 1024×768 红外分辨率，非制冷型红外探测器，超像素技术 2048×1536 温度范围 -40℃~2000℃，热灵敏度 &lt;30mk 测温精度：-10℃~150℃ 为 ±1℃ 或读数的 1%（取较大值），其余 ±2℃ 或 2% 帧频 30hz，保留更多实验细节 手动/自动对焦，180° 可旋转镜头，5.5 英寸 oled 触摸屏 视频流输出，smartview ir 软件辅助研发">
+        <div class="pc-img"><img src="img/products-studio/p06-3.jpg" alt="FLUKE TiX1060 大师级红外热像仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>大师级红外热像仪</h3>
+          <p class="pc-model">FLUKE TiX1060</p>
+          <p class="pc-brand">FLUKE 福禄克</p>
+          <ul class="pc-specs">
+            <li>1024×768 红外分辨率，非制冷型红外探测器，超像素技术 2048×1536</li>
+            <li>温度范围 -40℃~2000℃，热灵敏度 &lt;30mK</li>
+            <li>测温精度：-10℃~150℃ 为 ±1℃ 或读数的 1%（取较大值），其余 ±2℃ 或 2%</li>
+            <li>帧频 30Hz，保留更多实验细节</li>
+            <li>手动/自动对焦，180° 可旋转镜头，5.5 英寸 OLED 触摸屏</li>
+            <li>视频流输出，SmartView IR 软件辅助研发</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P06</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="magnity ht90 高温型热成像仪 magnity 红外热成像仪测温系统 infrared thermal imager 采用高动态范围探测器，测温范围大，可穿透光学玻璃窗口测温 1280×960 空间分辨率，多种镜头规格可选 用于钢铁、冶金、玻璃熔窑、加工过程控制、状态监测等领域 实时全像面坐标测温，可添加点、线、圆、多边形等测温对象 显示增强：自动对比度/灰度拉伸、分段人工灰度拉伸、dde 图像增强 可见光相机/云台控制，红外与可见光双舱联动 提供多语言多平台 sdk，接口丰富，便于二次开发">
+        <div class="pc-img"><img src="img/products-studio/p07-1.jpg" alt="MAGNITY HT90 高温型热成像仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>高温型热成像仪</h3>
+          <p class="pc-model">MAGNITY HT90</p>
+          <p class="pc-brand">MAGNITY</p>
+          <ul class="pc-specs">
+            <li>采用高动态范围探测器，测温范围大，可穿透光学玻璃窗口测温</li>
+            <li>1280×960 空间分辨率，多种镜头规格可选</li>
+            <li>用于钢铁、冶金、玻璃熔窑、加工过程控制、状态监测等领域</li>
+            <li>实时全像面坐标测温，可添加点、线、圆、多边形等测温对象</li>
+            <li>显示增强：自动对比度/灰度拉伸、分段人工灰度拉伸、DDE 图像增强</li>
+            <li>可见光相机/云台控制，红外与可见光双舱联动</li>
+            <li>提供多语言多平台 SDK，接口丰富，便于二次开发</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P07</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="magnity mw320(640) 在线式中波非制冷热像仪 magnity 红外热成像仪测温系统 infrared thermal imager 非制冷中波焦平面探测器，尺寸小巧，无制冷机寿命问题，性价比高 可穿透光学玻璃窗口测温、测火焰温度、透火焰测温、测玻璃温度 提供纯温度码流、纯视频码流、混合码流三种传输模式 支持多用户同时采集温度和视频数据 兼容海康威视、大华等常见 nvr，可通过 nvr 播放视频、控制云台与对焦 多镜头可选，可换镜头获得不同测温范围或视场角并准确测温">
+        <div class="pc-img"><img src="img/products-studio/p07-2.jpg" alt="MAGNITY MW320(640) 在线式中波非制冷热像仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>在线式中波非制冷热像仪</h3>
+          <p class="pc-model">MAGNITY MW320(640)</p>
+          <p class="pc-brand">MAGNITY</p>
+          <ul class="pc-specs">
+            <li>非制冷中波焦平面探测器，尺寸小巧，无制冷机寿命问题，性价比高</li>
+            <li>可穿透光学玻璃窗口测温、测火焰温度、透火焰测温、测玻璃温度</li>
+            <li>提供纯温度码流、纯视频码流、混合码流三种传输模式</li>
+            <li>支持多用户同时采集温度和视频数据</li>
+            <li>兼容海康威视、大华等常见 NVR，可通过 NVR 播放视频、控制云台与对焦</li>
+            <li>多镜头可选，可换镜头获得不同测温范围或视场角并准确测温</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P07</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="magnity sw640t 短波红外测温型热像仪 magnity 红外热成像仪测温系统 infrared thermal imager 采用 ingaas 焦平面传感器，响应波长 900~1700nm 积分时间微秒级，观测高速运动物体不拖尾 最高帧率可达 137hz，响应时间短 可透过玻璃窗口测温，结合 ai 智能算法实现实时在线检测 结构紧凑便于集成，多种镜头规格可选 提供多语言多平台 sdk，接口丰富">
+        <div class="pc-img"><img src="img/products-studio/p08-1.jpg" alt="MAGNITY SW640T 短波红外测温型热像仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>短波红外测温型热像仪</h3>
+          <p class="pc-model">MAGNITY SW640T</p>
+          <p class="pc-brand">MAGNITY</p>
+          <ul class="pc-specs">
+            <li>采用 InGaAs 焦平面传感器，响应波长 900~1700nm</li>
+            <li>积分时间微秒级，观测高速运动物体不拖尾</li>
+            <li>最高帧率可达 137Hz，响应时间短</li>
+            <li>可透过玻璃窗口测温，结合 AI 智能算法实现实时在线检测</li>
+            <li>结构紧凑便于集成，多种镜头规格可选</li>
+            <li>提供多语言多平台 SDK，接口丰富</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P08</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+    <section class="section cat section--alt" id="cat-acoustic">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="t-eyebrow" data-rv>02 · Acoustic Imaging Inspection System</p>
+          <h2 class="t-title" data-rv>声学成像仪检测系统<span class="cat-n">3 款</span></h2>
+          <p class="t-body" data-rv style="margin-top:12px">阵列声波传感技术非接触捕捉超声波与可听波信号，精准定位毫米级泄漏、局放、机械振动及异响源，检测效率较传统方法提升 60% 以上。</p>
+        </div>
+        <div class="grid">
+      <article class="card pcard" data-rv="fade" data-kw="fluke ii1020c 声学成像仪 fluke 福禄克 声学成像仪检测系统 acoustic imaging inspection system 气体泄漏、局部放电、气密性检测三合一 202 个数字式 mems 麦克风，-26dbfs 高敏成像 soundsight™ 将声波转化为声像图并叠加在可见光图像上 1300 万高清像素 + 3 倍数码变焦，7 寸 lcd 屏呈现问题点 leakq™ 模式实时显示泄漏量与估算泄漏成本；pdq™ 模式以机器学习识别放电类型并评估概率 局放检测频段 2khz~100khz，检测距离可达 120 米 机身重量仅 1.2 千克，设备端一键生成报告">
+        <div class="pc-img"><img src="img/products-studio/p09-1.jpg" alt="FLUKE ii1020C 声学成像仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>声学成像仪</h3>
+          <p class="pc-model">FLUKE ii1020C</p>
+          <p class="pc-brand">FLUKE 福禄克</p>
+          <ul class="pc-specs">
+            <li>气体泄漏、局部放电、气密性检测三合一</li>
+            <li>202 个数字式 MEMS 麦克风，-26dBFS 高敏成像</li>
+            <li>SoundSight™ 将声波转化为声像图并叠加在可见光图像上</li>
+            <li>1300 万高清像素 + 3 倍数码变焦，7 寸 LCD 屏呈现问题点</li>
+            <li>LeakQ™ 模式实时显示泄漏量与估算泄漏成本；PDQ™ 模式以机器学习识别放电类型并评估概率</li>
+            <li>局放检测频段 2kHz~100kHz，检测距离可达 120 米</li>
+            <li>机身重量仅 1.2 千克，设备端一键生成报告</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P09</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="fotric ac60 系列 声学成像仪 fotric 飞础科 声学成像仪检测系统 acoustic imaging inspection system 气体泄漏 + 局部放电两种专业检测，一机搞定 162 个高灵敏数字麦克风，14×13.5cm 面积螺旋式麦克风阵列 响应频率 2khz~100khz，检测距离 0.3~200 米 ip54 防尘防水，2 米抗跌落 泄漏检测可评估泄漏量与经济损失；局放可智能诊断悬浮、电晕、沿面放电 声像图导入专业分析软件，支持多维度分析并批量自动生成报告">
+        <div class="pc-img"><img src="img/products-studio/p10-1.jpg" alt="FOTRIC AC60 系列 声学成像仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>声学成像仪</h3>
+          <p class="pc-model">FOTRIC AC60 系列</p>
+          <p class="pc-brand">FOTRIC 飞础科</p>
+          <ul class="pc-specs">
+            <li>气体泄漏 + 局部放电两种专业检测，一机搞定</li>
+            <li>162 个高灵敏数字麦克风，14×13.5cm 面积螺旋式麦克风阵列</li>
+            <li>响应频率 2kHz~100kHz，检测距离 0.3~200 米</li>
+            <li>IP54 防尘防水，2 米抗跌落</li>
+            <li>泄漏检测可评估泄漏量与经济损失；局放可智能诊断悬浮、电晕、沿面放电</li>
+            <li>声像图导入专业分析软件，支持多维度分析并批量自动生成报告</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P10</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="raythink rg630 系列 手持式气体成像仪 raythink 睿创微纳 声学成像仪检测系统 acoustic imaging inspection system 定制带通滤波 + 高空间分辨率、高灵敏度非制冷 vox 红外探测器 甲烷、氟利昂、氨气、六氟化硫等数十种气体无接触可视化泄漏报警，同时满足日常测温 640×512 高分辨率，15mk 高灵敏度，5 吋 oled 触摸屏 气体浓度反演、自研气云着色算法，超低阈值探测微量泄漏 ai 智能体&quot;小睿&quot;支持全程语音设置参数 本安型防爆认证，5 小时续航，支持 gps 与北斗定位自动记录巡检轨迹">
+        <div class="pc-img"><img src="img/products-studio/p11-1.jpg" alt="Raythink RG630 系列 手持式气体成像仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>手持式气体成像仪</h3>
+          <p class="pc-model">Raythink RG630 系列</p>
+          <p class="pc-brand">RAYTHINK 睿创微纳</p>
+          <ul class="pc-specs">
+            <li>定制带通滤波 + 高空间分辨率、高灵敏度非制冷 VOx 红外探测器</li>
+            <li>甲烷、氟利昂、氨气、六氟化硫等数十种气体无接触可视化泄漏报警，同时满足日常测温</li>
+            <li>640×512 高分辨率，15mK 高灵敏度，5 吋 OLED 触摸屏</li>
+            <li>气体浓度反演、自研气云着色算法，超低阈值探测微量泄漏</li>
+            <li>AI 智能体&quot;小睿&quot;支持全程语音设置参数</li>
+            <li>本安型防爆认证，5 小时续航，支持 GPS 与北斗定位自动记录巡检轨迹</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P11</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+    <section class="section cat" id="cat-electrical">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="t-eyebrow" data-rv>03 · Electrical Measuring Instrument</p>
+          <h2 class="t-title" data-rv>电气测量仪器<span class="cat-n">3 款</span></h2>
+          <p class="t-body" data-rv style="margin-top:12px">HIOKI 日置创立于 1935 年，四大产品组覆盖自动测试设备、记录设备、电子测量仪器与现场测量仪器，广泛用于研发与设施设备维护。</p>
+        </div>
+        <div class="grid">
+      <article class="card pcard" data-rv="fade" data-kw="hioki mr6000 存储记录仪 hioki 日置 电气测量仪器 electrical measuring instrument 不仅绝缘测量，16ch 同时 200ms/s 高速测量（模拟单元 u8976×8） 8 个输入插槽，最多模拟 32ch 绝缘输入（u8975×8） 所有插槽安装时最多逻辑 128ch（逻辑单元 8973×8） 内置 256gb sata-ssd（选件），支持 u 盘或 sd 卡存储 温度、应变、频率等丰富的输入单元 高速数据传输是以前的 32 倍，边测量边实时存储；波形搜索&quot;存储管家&quot; 注：主机无法单独测量，需另购单元、输入线等选件">
+        <div class="pc-img"><img src="img/products-studio/p12-1.jpg" alt="HIOKI MR6000 存储记录仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>存储记录仪</h3>
+          <p class="pc-model">HIOKI MR6000</p>
+          <p class="pc-brand">HIOKI 日置</p>
+          <ul class="pc-specs">
+            <li>不仅绝缘测量，16ch 同时 200MS/s 高速测量（模拟单元 U8976×8）</li>
+            <li>8 个输入插槽，最多模拟 32ch 绝缘输入（U8975×8）</li>
+            <li>所有插槽安装时最多逻辑 128ch（逻辑单元 8973×8）</li>
+            <li>内置 256GB SATA-SSD（选件），支持 U 盘或 SD 卡存储</li>
+            <li>温度、应变、频率等丰富的输入单元</li>
+            <li>高速数据传输是以前的 32 倍，边测量边实时存储；波形搜索&quot;存储管家&quot;</li>
+            <li>注：主机无法单独测量，需另购单元、输入线等选件</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P12</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="hioki pw8001 功率分析仪 hioki 日置 电气测量仪器 electrical measuring instrument 使用 gan/sic 准确评估变频器和电机的功率转换效率 基本精度 ±0.03%，dc 精度 ±0.05%，50khz 精度 ±0.2%（输入单元 u7005） 18bit 采样率，抗干扰性 cmrr 110db/100khz 2 种输入单元构建合适的测量系统，1 台可同时测量 8 通道 功率自动补偿电流传感器的相位特性，可同时分析 4 台电机（选件） 可将测量数据整合到 can 网络（选件）；dc1500v cat i / dc1000v cat ii">
+        <div class="pc-img"><img src="img/products-studio/p12-2.jpg" alt="HIOKI PW8001 功率分析仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>功率分析仪</h3>
+          <p class="pc-model">HIOKI PW8001</p>
+          <p class="pc-brand">HIOKI 日置</p>
+          <ul class="pc-specs">
+            <li>使用 GaN/SiC 准确评估变频器和电机的功率转换效率</li>
+            <li>基本精度 ±0.03%，DC 精度 ±0.05%，50kHz 精度 ±0.2%（输入单元 U7005）</li>
+            <li>18bit 采样率，抗干扰性 CMRR 110dB/100kHz</li>
+            <li>2 种输入单元构建合适的测量系统，1 台可同时测量 8 通道</li>
+            <li>功率自动补偿电流传感器的相位特性，可同时分析 4 台电机（选件）</li>
+            <li>可将测量数据整合到 CAN 网络（选件）；DC1500V CAT I / DC1000V CAT II</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P12</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="hioki pq3198 电能质量分析仪 hioki 日置 电气测量仪器 electrical measuring instrument 1 台仪器同时进行电源故障的记录和分析 符合电能质量国际标准 iec61000-4-30 ed.2 class a 电流探头本机自动识别，ac/dc 电流探头由主机供电 可长时间记录，最多 9999 件 ac/dc 双系统（ch123&amp;ch4）效率运算，快速评价 ev 快充与光伏逆变器效率 瞬态过电压最大 6000vpeak、2ms/s、带宽 700khz；高次谐波最高 80khz 标配 pq3198 one 分析软件">
+        <div class="pc-img"><img src="img/products-studio/p12-3.jpg" alt="HIOKI PQ3198 电能质量分析仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>电能质量分析仪</h3>
+          <p class="pc-model">HIOKI PQ3198</p>
+          <p class="pc-brand">HIOKI 日置</p>
+          <ul class="pc-specs">
+            <li>1 台仪器同时进行电源故障的记录和分析</li>
+            <li>符合电能质量国际标准 IEC61000-4-30 Ed.2 Class A</li>
+            <li>电流探头本机自动识别，AC/DC 电流探头由主机供电</li>
+            <li>可长时间记录，最多 9999 件</li>
+            <li>AC/DC 双系统（CH123&amp;CH4）效率运算，快速评价 EV 快充与光伏逆变器效率</li>
+            <li>瞬态过电压最大 6000Vpeak、2MS/s、带宽 700kHz；高次谐波最高 80kHz</li>
+            <li>标配 PQ3198 ONE 分析软件</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P12</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+    <section class="section cat section--alt" id="cat-em">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="t-eyebrow" data-rv>04 · Electron Microscope (EM)</p>
+          <h2 class="t-title" data-rv>电子显微系统<span class="cat-n">4 款</span></h2>
+          <p class="t-body" data-rv style="margin-top:12px">Thermo Scientific（原 FEI）60 余年技术创新，是透射电镜 TEM、扫描电镜 SEM、DualBeam 聚焦离子束仪器的性能标准制定者。</p>
+        </div>
+        <div class="grid">
+      <article class="card pcard" data-rv="fade" data-kw="niton xl2 系列 便携式 x 射线荧光光谱仪 thermo fisher 赛默飞 电子显微系统 electron microscope (em) 轻轻扣动扳机即可在现场快速检测重金属元素 重量轻，可在任何环境和天气条件下使用 标准分析范围超过 25 种元素，满足常规现场分析需求 可检测 rcra 金属、主要污染物及美国环保局要求检测的物品 检测成本远低于实验室分析，便于快速准确决策">
+        <div class="pc-img"><img src="img/products-studio/p13-2.jpg" alt="Niton XL2 系列 便携式 X 射线荧光光谱仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>便携式 X 射线荧光光谱仪</h3>
+          <p class="pc-model">Niton XL2 系列</p>
+          <p class="pc-brand">Thermo Fisher 赛默飞</p>
+          <ul class="pc-specs">
+            <li>轻轻扣动扳机即可在现场快速检测重金属元素</li>
+            <li>重量轻，可在任何环境和天气条件下使用</li>
+            <li>标准分析范围超过 25 种元素，满足常规现场分析需求</li>
+            <li>可检测 RCRA 金属、主要污染物及美国环保局要求检测的物品</li>
+            <li>检测成本远低于实验室分析，便于快速准确决策</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P13</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="赛默飞场发射系列 场发射扫描电镜 fe-sem thermo fisher 赛默飞 电子显微系统 electron microscope (em) 可观察非均相有机材料、无机材料在微米、纳米级的样品表面特征 超高分辨扫描图像观察能力，采用最新数字化图像处理技术 纳米材料粒径测试与形貌观察的有效仪器 研究材料结构与性能关系不可缺少的重要工具">
+        <div class="pc-img"><img src="img/products-studio/p13-3.jpg" alt="赛默飞场发射系列 场发射扫描电镜 FE-SEM" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>场发射扫描电镜 FE-SEM</h3>
+          <p class="pc-model">赛默飞场发射系列</p>
+          <p class="pc-brand">Thermo Fisher 赛默飞</p>
+          <ul class="pc-specs">
+            <li>可观察非均相有机材料、无机材料在微米、纳米级的样品表面特征</li>
+            <li>超高分辨扫描图像观察能力，采用最新数字化图像处理技术</li>
+            <li>纳米材料粒径测试与形貌观察的有效仪器</li>
+            <li>研究材料结构与性能关系不可缺少的重要工具</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P13</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="quattro esem 系列 环境扫描电镜 thermo fisher 赛默飞 电子显微系统 electron microscope (em) 将成像与分析的综合性能与独特的环境模式（esem）相结合 可在天然状态下研究样品，无需复杂制样 支持原位实验，平台面向不同经验水平与学科的多用户">
+        <div class="pc-img"><img src="img/products-studio/p13-3.jpg" alt="QUATTRO ESEM 系列 环境扫描电镜" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>环境扫描电镜</h3>
+          <p class="pc-model">QUATTRO ESEM 系列</p>
+          <p class="pc-brand">Thermo Fisher 赛默飞</p>
+          <ul class="pc-specs">
+            <li>将成像与分析的综合性能与独特的环境模式（ESEM）相结合</li>
+            <li>可在天然状态下研究样品，无需复杂制样</li>
+            <li>支持原位实验，平台面向不同经验水平与学科的多用户</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P13</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="apreo sem 系列 场发射扫描电镜 thermo fisher 赛默飞 电子显微系统 electron microscope (em) 革命性复合透镜设计，将静电与磁透镜技术相结合 产生前所未有的分辨率与信号选择性 纳米颗粒、催化剂、粉末与纳米仪器研究的优选 不影响磁性样品性能">
+        <div class="pc-img"><img src="img/products-studio/p13-4.jpg" alt="Apreo SEM 系列 场发射扫描电镜" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>场发射扫描电镜</h3>
+          <p class="pc-model">Apreo SEM 系列</p>
+          <p class="pc-brand">Thermo Fisher 赛默飞</p>
+          <ul class="pc-specs">
+            <li>革命性复合透镜设计，将静电与磁透镜技术相结合</li>
+            <li>产生前所未有的分辨率与信号选择性</li>
+            <li>纳米颗粒、催化剂、粉末与纳米仪器研究的优选</li>
+            <li>不影响磁性样品性能</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P13</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+    <section class="section cat" id="cat-om">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="t-eyebrow" data-rv>05 · Optical Microscope (OM)</p>
+          <h2 class="t-title" data-rv>光学显微系统<span class="cat-n">12 款</span></h2>
+          <p class="t-body" data-rv style="margin-top:12px">LEICA 徕卡显微系统拥有 160 年显微镜生产历史，是显微成像系统行业的全球领导厂商，方案覆盖金属、电子半导体、电池、汽车与航空航天等行业。</p>
+        </div>
+        <div class="grid">
+      <article class="card pcard" data-rv="fade" data-kw="visoria m 材料显微镜 leica 徕卡 光学显微系统 optical microscope (om) 在日常显微镜操作中获得更高的效率和舒适度 适用于金属、电子和聚合物行业以及材料科学实验室 适配行业：电子和半导体、汽车与交通工业显微镜、电池制造、金属行业、电子器件横截面分析、能源与采矿、金相学、医疗器械质量保证">
+        <div class="pc-img"><img src="img/products-studio/p14-3.jpg" alt="Visoria M 材料显微镜" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>材料显微镜</h3>
+          <p class="pc-model">Visoria M</p>
+          <p class="pc-brand">LEICA 徕卡</p>
+          <ul class="pc-specs">
+            <li>在日常显微镜操作中获得更高的效率和舒适度</li>
+            <li>适用于金属、电子和聚合物行业以及材料科学实验室</li>
+            <li>适配行业：电子和半导体、汽车与交通工业显微镜、电池制造、金属行业、电子器件横截面分析、能源与采矿、金相学、医疗器械质量保证</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P14</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="visoria p 偏光显微镜 leica 徕卡 光学显微系统 optical microscope (om) 使用偏振光研究材料和地质样品的光学特性 在日常操作中提供更高的效率与舒适度 适配行业：汽车与交通工业显微镜、金属行业、检测显微镜、能源与采矿、自然资源显微镜">
+        <div class="pc-img"><img src="img/products-studio/p14-4.jpg" alt="Visoria P 偏光显微镜" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>偏光显微镜</h3>
+          <p class="pc-model">Visoria P</p>
+          <p class="pc-brand">LEICA 徕卡</p>
+          <ul class="pc-specs">
+            <li>使用偏振光研究材料和地质样品的光学特性</li>
+            <li>在日常操作中提供更高的效率与舒适度</li>
+            <li>适配行业：汽车与交通工业显微镜、金属行业、检测显微镜、能源与采矿、自然资源显微镜</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P14</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="dm4m &amp; dm6m 工业正置显微镜 leica 徕卡 光学显微系统 optical microscope (om) 既满足快速概览样品，也满足详细检查样品的需求 独特可靠的记忆功能可即时复制成像参数，轻松搞定重复性工作 适配行业：钢材质量评定、公检法取证、金相学、技术清洁度、测量显微镜、电池制造">
+        <div class="pc-img"><img src="img/products-studio/p14-2.jpg" alt="DM4M &amp; DM6M 工业正置显微镜" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>工业正置显微镜</h3>
+          <p class="pc-model">DM4M &amp; DM6M</p>
+          <p class="pc-brand">LEICA 徕卡</p>
+          <ul class="pc-specs">
+            <li>既满足快速概览样品，也满足详细检查样品的需求</li>
+            <li>独特可靠的记忆功能可即时复制成像参数，轻松搞定重复性工作</li>
+            <li>适配行业：钢材质量评定、公检法取证、金相学、技术清洁度、测量显微镜、电池制造</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P14</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="em tic 3x 离子束切割研磨系统 leica 徕卡 光学显微系统 optical microscope (om) 用于样品制备的离子束切割与研磨 适配行业：汽车与交通工业显微镜、能源与采矿、工业显微镜市场、电子器件横截面分析、电子和半导体、电池制造、材料科学与分析">
+        <div class="pc-img"><img src="img/products-studio/p14-7.jpg" alt="EM TIC 3X 离子束切割研磨系统" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>离子束切割研磨系统</h3>
+          <p class="pc-model">EM TIC 3X</p>
+          <p class="pc-brand">LEICA 徕卡</p>
+          <ul class="pc-specs">
+            <li>用于样品制备的离子束切割与研磨</li>
+            <li>适配行业：汽车与交通工业显微镜、能源与采矿、工业显微镜市场、电子器件横截面分析、电子和半导体、电池制造、材料科学与分析</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P14</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="m50 / m60 / m80 体视显微镜 leica 徕卡 光学显微系统 optical microscope (om) 常规体视显微镜，优化目视检查和分析流程 获得可靠、一致的结果 适配行业：pcb 检测、检测显微镜、工业显微镜市场、测量显微镜、组装与返工、医疗器械质量保证、钟表制造业">
+        <div class="pc-img"><img src="img/products-studio/p14-5.jpg" alt="M50 / M60 / M80 体视显微镜" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>体视显微镜</h3>
+          <p class="pc-model">M50 / M60 / M80</p>
+          <p class="pc-brand">LEICA 徕卡</p>
+          <ul class="pc-specs">
+            <li>常规体视显微镜，优化目视检查和分析流程</li>
+            <li>获得可靠、一致的结果</li>
+            <li>适配行业：PCB 检测、检测显微镜、工业显微镜市场、测量显微镜、组装与返工、医疗器械质量保证、钟表制造业</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P14</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="ivesta 3 体视显微镜 leica 徕卡 光学显微系统 optical microscope (om) 常规体视显微镜，优化目视检查和分析流程，同时获得可靠、一致的结果 适配行业：检测显微镜、电子和半导体行业、汽车与交通工业显微镜、医疗器械质量保证与质量控制、组装与返工用显微镜、测量显微镜、钟表制造业用显微镜、教学显微镜">
+        <div class="pc-img"><img src="img/products-studio/p14-6.jpg" alt="Ivesta 3 体视显微镜" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>体视显微镜</h3>
+          <p class="pc-model">Ivesta 3</p>
+          <p class="pc-brand">LEICA 徕卡</p>
+          <ul class="pc-specs">
+            <li>常规体视显微镜，优化目视检查和分析流程，同时获得可靠、一致的结果</li>
+            <li>适配行业：检测显微镜、电子和半导体行业、汽车与交通工业显微镜、医疗器械质量保证与质量控制、组装与返工用显微镜、测量显微镜、钟表制造业用显微镜、教学显微镜</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P14</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="dvm6 数码显微镜 leica 徕卡 光学显微系统 optical microscope (om) 用于二维和三维成像及分析的数码显微镜 适配行业：检测显微镜、材料科学与分析、汽车与交通工业显微镜、pcb 检测、金属行业、电池制造">
+        <div class="pc-img"><img src="img/products-studio/p15-1.jpg" alt="DVM6 数码显微镜" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>数码显微镜</h3>
+          <p class="pc-model">DVM6</p>
+          <p class="pc-brand">LEICA 徕卡</p>
+          <ul class="pc-specs">
+            <li>用于二维和三维成像及分析的数码显微镜</li>
+            <li>适配行业：检测显微镜、材料科学与分析、汽车与交通工业显微镜、PCB 检测、金属行业、电池制造</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P15</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="dm6 m libs 材料分析显微镜 leica 徕卡 光学显微系统 optical microscope (om) 适用于目视检验和化学检验的材料分析解决方案 适配行业：金相学、汽车与交通工业显微镜、技术清洁度、金属行业、电子器件横截面分析、电池制造、测量显微镜">
+        <div class="pc-img"><img src="img/products-studio/p15-2.jpg" alt="DM6 M LIBS 材料分析显微镜" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>材料分析显微镜</h3>
+          <p class="pc-model">DM6 M LIBS</p>
+          <p class="pc-brand">LEICA 徕卡</p>
+          <ul class="pc-specs">
+            <li>适用于目视检验和化学检验的材料分析解决方案</li>
+            <li>适配行业：金相学、汽车与交通工业显微镜、技术清洁度、金属行业、电子器件横截面分析、电池制造、测量显微镜</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P15</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="dmi8 m/c/a 倒置式工业显微镜 leica 徕卡 光学显微系统 optical microscope (om) leica dmi8 倒置式工业显微镜，面向自动化检测流程 适配行业：工业应用、金相学、钢材质量评定、材料科学与分析、金属行业、电池制造、测量显微镜">
+        <div class="pc-img"><img src="img/products-studio/p15-3.jpg" alt="DMi8 M/C/A 倒置式工业显微镜" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>倒置式工业显微镜</h3>
+          <p class="pc-model">DMi8 M/C/A</p>
+          <p class="pc-brand">LEICA 徕卡</p>
+          <ul class="pc-specs">
+            <li>Leica DMi8 倒置式工业显微镜，面向自动化检测流程</li>
+            <li>适配行业：工业应用、金相学、钢材质量评定、材料科学与分析、金属行业、电池制造、测量显微镜</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P15</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="m125 c / m205 c / m205 a 编码型体视显微镜 leica 徕卡 光学显微系统 optical microscope (om) 编码型体视显微镜，成像参数可记录与追溯 适配行业：汽车与交通工业显微镜、pcb 检测、技术清洁度、检测显微镜、测量显微镜、艺术品修复、医疗器械质量保证与质量控制">
+        <div class="pc-img"><img src="img/products-studio/p15-6.jpg" alt="M125 C / M205 C / M205 A 编码型体视显微镜" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>编码型体视显微镜</h3>
+          <p class="pc-model">M125 C / M205 C / M205 A</p>
+          <p class="pc-brand">LEICA 徕卡</p>
+          <ul class="pc-specs">
+            <li>编码型体视显微镜，成像参数可记录与追溯</li>
+            <li>适配行业：汽车与交通工业显微镜、PCB 检测、技术清洁度、检测显微镜、测量显微镜、艺术品修复、医疗器械质量保证与质量控制</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P15</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="ivesta 3 体视显微镜 leica 徕卡 光学显微系统 optical microscope (om) 优化目视检查和分析流程，同时获得可靠、一致的结果 适配行业：检测显微镜、电子和半导体行业、组装与返工用显微镜、测量显微镜、钟表制造业用显微镜、教学显微镜">
+        <div class="pc-img"><img src="img/products-studio/p15-5.jpg" alt="Ivesta 3 体视显微镜" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>体视显微镜</h3>
+          <p class="pc-model">Ivesta 3</p>
+          <p class="pc-brand">LEICA 徕卡</p>
+          <ul class="pc-specs">
+            <li>优化目视检查和分析流程，同时获得可靠、一致的结果</li>
+            <li>适配行业：检测显微镜、电子和半导体行业、组装与返工用显微镜、测量显微镜、钟表制造业用显微镜、教学显微镜</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P15</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="em ace600 高真空溅射/镀膜机 leica 徕卡 光学显微系统 optical microscope (om) 高真空溅射、碳丝和电子束镀膜一体机 用于电镜样品制备 适配行业：汽车与交通工业显微镜、工业显微镜市场、电子显微镜样品制备工作流程与用途">
+        <div class="pc-img"><img src="img/products-studio/p15-4.jpg" alt="EM ACE600 高真空溅射/镀膜机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>高真空溅射/镀膜机</h3>
+          <p class="pc-model">EM ACE600</p>
+          <p class="pc-brand">LEICA 徕卡</p>
+          <ul class="pc-specs">
+            <li>高真空溅射、碳丝和电子束镀膜一体机</li>
+            <li>用于电镜样品制备</li>
+            <li>适配行业：汽车与交通工业显微镜、工业显微镜市场、电子显微镜样品制备工作流程与用途</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P15</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+    <section class="section cat section--alt" id="cat-surface">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="t-eyebrow" data-rv>06 · Surface Mechanical Properties</p>
+          <h2 class="t-title" data-rv>表面机械特性表征<span class="cat-n">6 款</span></h2>
+          <p class="t-body" data-rv style="margin-top:12px">ANTON PAAR 安东帕涵盖表面机械表征的四种最重要测试方法：纳米压痕、划痕测试、摩擦磨损与球磨仪，可测最硬的类金刚石（DLC）膜到最软的水凝胶。</p>
+        </div>
+        <div class="grid">
+      <article class="card pcard" data-rv="fade" data-kw="anton paar 纳米压痕系列 纳米压痕仪 anton paar 安东帕 表面机械特性表征 surface mechanical properties 表征薄膜、涂层或基体的机械特性：硬度、弹性模量、蠕变、疲劳、应力应变、弹塑性能 独特的表面参比设计，提供最高的测量稳定性和快速的循环周期 应用行业：切削工具、汽车、电子器件、生物医学、半导体、聚合物、光学部件、mems">
+        <div class="pc-img"><img src="img/products-studio/p16-2.jpg" alt="Anton Paar 纳米压痕系列 纳米压痕仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>纳米压痕仪</h3>
+          <p class="pc-model">Anton Paar 纳米压痕系列</p>
+          <p class="pc-brand">ANTON PAAR 安东帕</p>
+          <ul class="pc-specs">
+            <li>表征薄膜、涂层或基体的机械特性：硬度、弹性模量、蠕变、疲劳、应力应变、弹塑性能</li>
+            <li>独特的表面参比设计，提供最高的测量稳定性和快速的循环周期</li>
+            <li>应用行业：切削工具、汽车、电子器件、生物医学、半导体、聚合物、光学部件、MEMS</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P16</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="anton paar 划痕系列 划痕测试仪 anton paar 安东帕 表面机械特性表征 surface mechanical properties 表征膜-基体特性，量化结合力和摩擦力等参数 确定涂层的结合力、耐刮伤性和耐磨损性 用于科学研究和质量控制">
+        <div class="pc-img"><img src="img/products-studio/p16-2.jpg" alt="Anton Paar 划痕系列 划痕测试仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>划痕测试仪</h3>
+          <p class="pc-model">Anton Paar 划痕系列</p>
+          <p class="pc-brand">ANTON PAAR 安东帕</p>
+          <ul class="pc-specs">
+            <li>表征膜-基体特性，量化结合力和摩擦力等参数</li>
+            <li>确定涂层的结合力、耐刮伤性和耐磨损性</li>
+            <li>用于科学研究和质量控制</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P16</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="anton paar 球坑测厚 球磨厚度仪 anton paar 安东帕 表面机械特性表征 surface mechanical properties 采用球坑法，快速简单地测定薄膜涂层厚度 适用于单层和多层膜，完全符合相关国际标准">
+        <div class="pc-img"><img src="img/products-studio/p16-3.jpg" alt="Anton Paar 球坑测厚 球磨厚度仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>球磨厚度仪</h3>
+          <p class="pc-model">Anton Paar 球坑测厚</p>
+          <p class="pc-brand">ANTON PAAR 安东帕</p>
+          <ul class="pc-specs">
+            <li>采用球坑法，快速简单地测定薄膜涂层厚度</li>
+            <li>适用于单层和多层膜，完全符合相关国际标准</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P16</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="anton paar 粘度系列 粘度计 anton paar 安东帕 表面机械特性表征 surface mechanical properties 用于石油润滑油、涂料油墨、食品日化、制药、高分子材料 精准测定液体粘度、流变曲线、屈服应力，支撑研发配方与产线质检 搭载高精度控温模块，适配微量至高粘稠样品，匹配多国行业检测标准">
+        <div class="pc-img"><img src="img/products-studio/p16-4.jpg" alt="Anton Paar 粘度系列 粘度计" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>粘度计</h3>
+          <p class="pc-model">Anton Paar 粘度系列</p>
+          <p class="pc-brand">ANTON PAAR 安东帕</p>
+          <ul class="pc-specs">
+            <li>用于石油润滑油、涂料油墨、食品日化、制药、高分子材料</li>
+            <li>精准测定液体粘度、流变曲线、屈服应力，支撑研发配方与产线质检</li>
+            <li>搭载高精度控温模块，适配微量至高粘稠样品，匹配多国行业检测标准</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P16</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="anton paar 摩擦学系列 摩擦磨损试验机 anton paar 安东帕 表面机械特性表征 surface mechanical properties 研究摩擦、磨损和润滑特性，测量材料的摩擦系数和磨损率 适用于各种测试参数、接触形状和环境条件 可模拟材料的真实使用条件进行摩擦测试">
+        <div class="pc-img"><img src="img/products-studio/p16-5.jpg" alt="Anton Paar 摩擦学系列 摩擦磨损试验机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>摩擦磨损试验机</h3>
+          <p class="pc-model">Anton Paar 摩擦学系列</p>
+          <p class="pc-brand">ANTON PAAR 安东帕</p>
+          <ul class="pc-specs">
+            <li>研究摩擦、磨损和润滑特性，测量材料的摩擦系数和磨损率</li>
+            <li>适用于各种测试参数、接触形状和环境条件</li>
+            <li>可模拟材料的真实使用条件进行摩擦测试</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P16</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="anton paar 密度系列 密度计 anton paar 安东帕 表面机械特性表征 surface mechanical properties 市场领先的密度测量解决方案，针对工业与科研需求精准定制 提供饮料行业与石油行业专用型号 覆盖化学品、药品、化妆品、石油制品、香料、生物燃料等领域的密度与浓度检测 便携式仪器具备本质安全版本，可应对极端恶劣作业环境 采用久经验证的 u 形振荡管原理，稳定性与精度全球领先">
+        <div class="pc-img"><img src="img/products-studio/p16-6.jpg" alt="Anton Paar 密度系列 密度计" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>密度计</h3>
+          <p class="pc-model">Anton Paar 密度系列</p>
+          <p class="pc-brand">ANTON PAAR 安东帕</p>
+          <ul class="pc-specs">
+            <li>市场领先的密度测量解决方案，针对工业与科研需求精准定制</li>
+            <li>提供饮料行业与石油行业专用型号</li>
+            <li>覆盖化学品、药品、化妆品、石油制品、香料、生物燃料等领域的密度与浓度检测</li>
+            <li>便携式仪器具备本质安全版本，可应对极端恶劣作业环境</li>
+            <li>采用久经验证的 U 形振荡管原理，稳定性与精度全球领先</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P16</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+    <section class="section cat" id="cat-utm">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="t-eyebrow" data-rv>07 · Universal Testing Machine (UTM)</p>
+          <h2 class="t-title" data-rv>万能材料试验机<span class="cat-n">2 款</span></h2>
+          <p class="t-body" data-rv style="margin-top:12px">SHIMADZU 岛津创立于 1875 年，UTM 产品用于金属、高分子、复合材料、电子材料、生物材料等的拉伸、压缩、弯曲、剪切、剥离力学性能测试。</p>
+        </div>
+        <div class="grid">
+      <article class="card pcard" data-rv="fade" data-kw="agx-v 系列 研究级电子万能试验机 shimadzu 岛津 万能材料试验机 universal testing machine (utm) 试验力精度：显示值 ±0.5% 以内（载荷传感器容量 1/1000~1/100），±0.3% 以内（1/100~1） 采样速度最大 10khz 横梁位置精度：指示值 ±0.05% 以内；指示值 20mm 以下时 ±0.01mm 手持操作面板具有试验力/应力值/行程显示功能 极低可控速度低至 0.0005mm/min，速度范围宽 机型：双立柱台式 10kn/20kn/50kn；双立柱落地式 50kn/100kn/300kn/600kn">
+        <div class="pc-img"><img src="img/products-studio/p17-1.jpg" alt="AGX-V 系列 研究级电子万能试验机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>研究级电子万能试验机</h3>
+          <p class="pc-model">AGX-V 系列</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>试验力精度：显示值 ±0.5% 以内（载荷传感器容量 1/1000~1/100），±0.3% 以内（1/100~1）</li>
+            <li>采样速度最大 10kHz</li>
+            <li>横梁位置精度：指示值 ±0.05% 以内；指示值 20mm 以下时 ±0.01mm</li>
+            <li>手持操作面板具有试验力/应力值/行程显示功能</li>
+            <li>极低可控速度低至 0.0005mm/min，速度范围宽</li>
+            <li>机型：双立柱台式 10KN/20KN/50KN；双立柱落地式 50KN/100KN/300KN/600KN</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P17</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="ags-x 系列 电子万能试验机 shimadzu 岛津 万能材料试验机 universal testing machine (utm) 试验力精度：显示值 ±0.5% 以内（载荷传感器容量 1/500~1） 采样速度最大 1khz 横梁位置精度：指示值 ±0.1% 以内；指示值 10mm 以下时 ±0.01mm 操作面板具有试验力/应力值/行程显示功能 较低可控速度低至 0.001mm/min，速度范围宽 机型：双立柱台式 10kn/20kn/50kn；双立柱落地式 100kn/300kn">
+        <div class="pc-img"><img src="img/products-studio/p17-2.jpg" alt="AGS-X 系列 电子万能试验机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>电子万能试验机</h3>
+          <p class="pc-model">AGS-X 系列</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>试验力精度：显示值 ±0.5% 以内（载荷传感器容量 1/500~1）</li>
+            <li>采样速度最大 1kHz</li>
+            <li>横梁位置精度：指示值 ±0.1% 以内；指示值 10mm 以下时 ±0.01mm</li>
+            <li>操作面板具有试验力/应力值/行程显示功能</li>
+            <li>较低可控速度低至 0.001mm/min，速度范围宽</li>
+            <li>机型：双立柱台式 10KN/20KN/50KN；双立柱落地式 100KN/300KN</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P17</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+    <section class="section cat section--alt" id="cat-fatigue">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="t-eyebrow" data-rv>08 · Fatigue Testing Machine</p>
+          <h2 class="t-title" data-rv>疲劳试验机<span class="cat-n">5 款</span></h2>
+          <p class="t-body" data-rv style="margin-top:12px">从微小试件的电磁疲劳到 20kHz 超声波疲劳，覆盖高周、低周与原位观测的完整疲劳寿命评价手段。</p>
+        </div>
+        <div class="grid">
+      <article class="card pcard" data-rv="fade" data-kw="mmt 系列 微小电磁力疲劳试验机 shimadzu 岛津 疲劳试验机 fatigue testing machine 采用极高频率响应的电磁型作动器作为加载机构 可在微小试验力、微小位移条件下进行高速、高精度的控制和测量 面向生物、电子等领域的微小材料、微小部件疲劳寿命评价 载荷：100n（可选 1kn 和 5kn）">
+        <div class="pc-img"><img src="img/products-studio/p18-1.jpg" alt="MMT 系列 微小电磁力疲劳试验机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>微小电磁力疲劳试验机</h3>
+          <p class="pc-model">MMT 系列</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>采用极高频率响应的电磁型作动器作为加载机构</li>
+            <li>可在微小试验力、微小位移条件下进行高速、高精度的控制和测量</li>
+            <li>面向生物、电子等领域的微小材料、微小部件疲劳寿命评价</li>
+            <li>载荷：100N（可选 1KN 和 5KN）</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P18</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="ehf 系列 电液伺服疲劳试验机 shimadzu 岛津 疲劳试验机 fatigue testing machine 液压伺服机构，用于标准样品的静态、疲劳、断裂韧性测试 可配置高低温环境试验系统实现环境温度下的疲劳试验 小台式 ehf-l：作动器上置，载荷 1/2/5/10kn 落地式 ehf-e：作动器下置，载荷 ±50/±100/±200/±300kn 落地式 ehf-u：作动器上置，载荷 ±50/±100/±200/±300kn">
+        <div class="pc-img"><img src="img/products-studio/p18-2.jpg" alt="EHF 系列 电液伺服疲劳试验机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>电液伺服疲劳试验机</h3>
+          <p class="pc-model">EHF 系列</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>液压伺服机构，用于标准样品的静态、疲劳、断裂韧性测试</li>
+            <li>可配置高低温环境试验系统实现环境温度下的疲劳试验</li>
+            <li>小台式 EHF-L：作动器上置，载荷 1/2/5/10KN</li>
+            <li>落地式 EHF-E：作动器下置，载荷 ±50/±100/±200/±300KN</li>
+            <li>落地式 EHF-U：作动器上置，载荷 ±50/±100/±200/±300KN</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P18</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="ehf-ev100hz300 300hz 高周疲劳试验系统 shimadzu 岛津 疲劳试验机 fatigue testing machine 用于长寿命评价以及部件材料的 10⁸ 次疲劳试验 液压伺服式，动态 300hz 试验力容量 ±20kn，作动器行程 ±10mm 试验频率 0.001hz ~ 最大 300hz">
+        <div class="pc-img"><img src="img/products-studio/p18-3.jpg" alt="EHF-EV100Hz300 300Hz 高周疲劳试验系统" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>300Hz 高周疲劳试验系统</h3>
+          <p class="pc-model">EHF-EV100Hz300</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>用于长寿命评价以及部件材料的 10⁸ 次疲劳试验</li>
+            <li>液压伺服式，动态 300Hz</li>
+            <li>试验力容量 ±20kN，作动器行程 ±10mm</li>
+            <li>试验频率 0.001Hz ~ 最大 300Hz</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P18</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="usf-2000 超声波疲劳试验机 shimadzu 岛津 疲劳试验机 fatigue testing machine 以 20khz 的重复速度快速评价金属材料等的疲劳寿命 10⁸ 次循环只需 6 日即可完成（100hz 频率下需 3.2 年） 适合材料的长寿命评价以及高速振动再现试验 能简单再现因微小缺陷产生的疲劳破坏，可检出材料中的微小缺陷、夹杂物 通过断面观察判定有无微小材料缺陷">
+        <div class="pc-img"><img src="img/products-studio/p18-4.jpg" alt="USF-2000 超声波疲劳试验机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>超声波疲劳试验机</h3>
+          <p class="pc-model">USF-2000</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>以 20kHz 的重复速度快速评价金属材料等的疲劳寿命</li>
+            <li>10⁸ 次循环只需 6 日即可完成（100Hz 频率下需 3.2 年）</li>
+            <li>适合材料的长寿命评价以及高速振动再现试验</li>
+            <li>能简单再现因微小缺陷产生的疲劳破坏，可检出材料中的微小缺陷、夹杂物</li>
+            <li>通过断面观察判定有无微小材料缺陷</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P18</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="sem-seveo em 高温原位疲劳试验机 shimadzu 岛津 疲劳试验机 fatigue testing machine 在疲劳试验过程中动态实时观测样品表面的微观破坏 sem 与试验机一体化设计，设计时即考虑减振效果 对样品加载时同步调节 sem 电子束路径，得到静止的 sem 图像 可实现最高 800℃ 的高温环境">
+        <div class="pc-img"><img src="img/products-studio/p18-5.jpg" alt="SEM-SEVEO EM 高温原位疲劳试验机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>EM 高温原位疲劳试验机</h3>
+          <p class="pc-model">SEM-SEVEO</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>在疲劳试验过程中动态实时观测样品表面的微观破坏</li>
+            <li>SEM 与试验机一体化设计，设计时即考虑减振效果</li>
+            <li>对样品加载时同步调节 SEM 电子束路径，得到静止的 SEM 图像</li>
+            <li>可实现最高 800℃ 的高温环境</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P18</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+    <section class="section cat" id="cat-metal">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="t-eyebrow" data-rv>09 · Elemental Analysis for Metal</p>
+          <h2 class="t-title" data-rv>金属元素分析<span class="cat-n">9 款</span></h2>
+          <p class="t-body" data-rv style="margin-top:12px">从光谱、能谱到质谱前处理，覆盖金属材料的成分分析、物相分析、气体元素与碳硫分析全流程。</p>
+        </div>
+        <div class="grid">
+      <article class="card pcard" data-rv="fade" data-kw="shimadzu epma-8050g 电子探针分析仪 shimadzu 岛津 金属元素分析 elemental analysis for metal 在产品检测、失效分析、工艺优化、基础研究等方面都能发挥效用 直观显示合金表面渗层元素的含量及分布情况 可分析腐蚀后各元素对应的分布特征、疲劳断口夹杂物微观特征 可确定不同热处理工艺下铝合金中锌元素的表面分布特征及元素在镍基合金表面渗层的扩散形貌">
+        <div class="pc-img"><img src="img/products-studio/p19-1.jpg" alt="SHIMADZU EPMA-8050G 电子探针分析仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>电子探针分析仪</h3>
+          <p class="pc-model">SHIMADZU EPMA-8050G</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>在产品检测、失效分析、工艺优化、基础研究等方面都能发挥效用</li>
+            <li>直观显示合金表面渗层元素的含量及分布情况</li>
+            <li>可分析腐蚀后各元素对应的分布特征、疲劳断口夹杂物微观特征</li>
+            <li>可确定不同热处理工艺下铝合金中锌元素的表面分布特征及元素在镍基合金表面渗层的扩散形貌</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P19</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="shimadzu xrd-7000 x 射线衍射仪 shimadzu 岛津 金属元素分析 elemental analysis for metal 物相分析：包括定性分析和定量分析 取向分析：例如测定硅钢片的取向 晶粒尺寸和微观应力的大小测定 宏观残留应力的方向和大小测定 合金相变：脱溶、有序-无序转变、母相新相的晶体学关系等 研究非晶态金属和液态金属结构">
+        <div class="pc-img"><img src="img/products-studio/p19-2.jpg" alt="SHIMADZU XRD-7000 X 射线衍射仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>X 射线衍射仪</h3>
+          <p class="pc-model">SHIMADZU XRD-7000</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>物相分析：包括定性分析和定量分析</li>
+            <li>取向分析：例如测定硅钢片的取向</li>
+            <li>晶粒尺寸和微观应力的大小测定</li>
+            <li>宏观残留应力的方向和大小测定</li>
+            <li>合金相变：脱溶、有序-无序转变、母相新相的晶体学关系等</li>
+            <li>研究非晶态金属和液态金属结构</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P19</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="shimadzu edx 700 x 射线荧光光谱仪 shimadzu 岛津 金属元素分析 elemental analysis for metal 以 x 射线为激发源，快速、非破坏式的金属元素测量方法 样品可以是固体也可以是溶液 rohs 指令、elv 指令、无卤素等筛选分析 机械零部件成分分析及镀层厚度、涂层附着量检测 原材料、合金、焊锡、贵金属的主要成分与残余成分分析">
+        <div class="pc-img"><img src="img/products-studio/p19-3.jpg" alt="SHIMADZU EDX 700 X 射线荧光光谱仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>X 射线荧光光谱仪</h3>
+          <p class="pc-model">SHIMADZU EDX 700</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>以 X 射线为激发源，快速、非破坏式的金属元素测量方法</li>
+            <li>样品可以是固体也可以是溶液</li>
+            <li>RoHS 指令、ELV 指令、无卤素等筛选分析</li>
+            <li>机械零部件成分分析及镀层厚度、涂层附着量检测</li>
+            <li>原材料、合金、焊锡、贵金属的主要成分与残余成分分析</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P19</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="icp-oes 电感耦合等离子体发射光谱仪 shimadzu 岛津 金属元素分析 elemental analysis for metal 以电感耦合等离子体炬作为激发光源的发射光谱分析仪器 难熔合金的元素含量分析；高纯有色金属及其合金的微量分析 金属材料、电源材料、贵金属研究与生产用微量元素分析 电子、通讯材料及其包装材料中的有害物质元素含量检测 医疗器械及其包装材料中的有害物质及化学成分检测">
+        <div class="pc-img"><img src="img/products-studio/p19-4.jpg" alt="ICP-OES 电感耦合等离子体发射光谱仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>电感耦合等离子体发射光谱仪</h3>
+          <p class="pc-model">ICP-OES</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>以电感耦合等离子体炬作为激发光源的发射光谱分析仪器</li>
+            <li>难熔合金的元素含量分析；高纯有色金属及其合金的微量分析</li>
+            <li>金属材料、电源材料、贵金属研究与生产用微量元素分析</li>
+            <li>电子、通讯材料及其包装材料中的有害物质元素含量检测</li>
+            <li>医疗器械及其包装材料中的有害物质及化学成分检测</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P19</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="agilent aa 240 原子吸收光谱仪 agilent 安捷伦 金属元素分析 elemental analysis for metal 将灵活性和硬件可靠性结合，提供高性价比的火焰/石墨炉/氢化物分析产品 可测定多种元素 火焰原子吸收法可测到 10⁻⁹ g/ml 数量级 石墨炉原子吸收法可测到 10⁻¹² g/ml 数量级 氢化物发生器可对汞、砷、铅、硒、锡、碲、锑、锗等 8 种挥发性元素做微痕量测定">
+        <div class="pc-img"><img src="img/products-studio/p19-5.jpg" alt="AGILENT AA 240 原子吸收光谱仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>原子吸收光谱仪</h3>
+          <p class="pc-model">AGILENT AA 240</p>
+          <p class="pc-brand">AGILENT 安捷伦</p>
+          <ul class="pc-specs">
+            <li>将灵活性和硬件可靠性结合，提供高性价比的火焰/石墨炉/氢化物分析产品</li>
+            <li>可测定多种元素</li>
+            <li>火焰原子吸收法可测到 10⁻⁹ g/mL 数量级</li>
+            <li>石墨炉原子吸收法可测到 10⁻¹² g/mL 数量级</li>
+            <li>氢化物发生器可对汞、砷、铅、硒、锡、碲、锑、锗等 8 种挥发性元素做微痕量测定</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P19</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="thermofisher arl 8860 电火花直读光谱仪 thermo fisher 赛默飞 金属元素分析 elemental analysis for metal 采用高频电火花为激发源，快速的常规元素分析方法 采用 pmt 的 paschen-runge 光学系统，焦距一米，具备最佳分辨率 光室采用铸铁制造，工作环境为真空，确保最高稳定性">
+        <div class="pc-img"><img src="img/products-studio/p20-1.jpg" alt="THERMOFISHER ARL 8860 电火花直读光谱仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>电火花直读光谱仪</h3>
+          <p class="pc-model">THERMOFISHER ARL 8860</p>
+          <p class="pc-brand">Thermo Fisher 赛默飞</p>
+          <ul class="pc-specs">
+            <li>采用高频电火花为激发源，快速的常规元素分析方法</li>
+            <li>采用 PMT 的 Paschen-Runge 光学系统，焦距一米，具备最佳分辨率</li>
+            <li>光室采用铸铁制造，工作环境为真空，确保最高稳定性</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P20</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="hitachi pmi-master pro2 移动式直读光谱仪 hitachi 日立 金属元素分析 elemental analysis for metal 用于标准金属物质牌号鉴定及化学元素检测 适应各种形状的样品分析 结构精密紧凑且坚固耐用，强大的电池功能，模块化设计 在紫外激发枪帮助下，还可进一步检测 p、s 等紫外元素">
+        <div class="pc-img"><img src="img/products-studio/p20-2.jpg" alt="HITACHI PMI-MASTER PRO2 移动式直读光谱仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>移动式直读光谱仪</h3>
+          <p class="pc-model">HITACHI PMI-MASTER PRO2</p>
+          <p class="pc-brand">HITACHI 日立</p>
+          <ul class="pc-specs">
+            <li>用于标准金属物质牌号鉴定及化学元素检测</li>
+            <li>适应各种形状的样品分析</li>
+            <li>结构精密紧凑且坚固耐用，强大的电池功能，模块化设计</li>
+            <li>在紫外激发枪帮助下，还可进一步检测 P、S 等紫外元素</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P20</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="leco tch-600 氧氮氢分析仪 leco 力可 金属元素分析 elemental analysis for metal 适合金属材料中的氧、氮、氢元素含量分析 新型的固态红外检测器和热导检测器 高低含量自动切换检测，最大的样本量 更低的检出限和更宽的分析范围，最佳的准确度和精度">
+        <div class="pc-img"><img src="img/products-studio/p20-3.jpg" alt="LECO TCH-600 氧氮氢分析仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>氧氮氢分析仪</h3>
+          <p class="pc-model">LECO TCH-600</p>
+          <p class="pc-brand">LECO 力可</p>
+          <ul class="pc-specs">
+            <li>适合金属材料中的氧、氮、氢元素含量分析</li>
+            <li>新型的固态红外检测器和热导检测器</li>
+            <li>高低含量自动切换检测，最大的样本量</li>
+            <li>更低的检出限和更宽的分析范围，最佳的准确度和精度</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P20</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="leco cs-230 碳硫分析仪 leco 力可 金属元素分析 elemental analysis for metal 用于黑色金属（钢、铁及其合金）、高温合金（硬质合金）、有色金属、无机材料、矿石、炉渣等碳硫含量分析 分析范围（0.25 克试样）：碳 2ppm~14.0%；硫 2ppm~1.6% 分析精度：碳 1ppm 或 0.5%rsd；硫 1ppm 或 1.0%rsd">
+        <div class="pc-img"><img src="img/products-studio/p20-4.jpg" alt="LECO CS-230 碳硫分析仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>碳硫分析仪</h3>
+          <p class="pc-model">LECO CS-230</p>
+          <p class="pc-brand">LECO 力可</p>
+          <ul class="pc-specs">
+            <li>用于黑色金属（钢、铁及其合金）、高温合金（硬质合金）、有色金属、无机材料、矿石、炉渣等碳硫含量分析</li>
+            <li>分析范围（0.25 克试样）：碳 2ppm~14.0%；硫 2ppm~1.6%</li>
+            <li>分析精度：碳 1ppm 或 0.5%RSD；硫 1ppm 或 1.0%RSD</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P20</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+    <section class="section cat section--alt" id="cat-metalmec">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="t-eyebrow" data-rv>10 · Testing Machines for Mechanical Properties</p>
+          <h2 class="t-title" data-rv>金属材料机械性能表征<span class="cat-n">7 款</span></h2>
+          <p class="t-body" data-rv style="margin-top:12px">面向金属板材、棒材与结构件的高低温拉伸、冲击、蠕变与扭转疲劳测试，可配机器人实现无人值守批量试验。</p>
+        </div>
+        <div class="grid">
+      <article class="card pcard" data-rv="fade" data-kw="全自动拉伸试验系统 机器人自动力学性能试验系统 shimadzu 岛津 金属材料机械性能表征 testing machines for mechanical properties 在无人值守的情况下，连续完成批量材料试样的自动装夹、尺寸自动测量、变形数据自动记录、试验数据自动分析 由机器人、电子式拉力试验机、横截面尺寸测量平台、全自动引伸计、对夹式平推夹具等构成 可不间断、高精度地完成批量试样的材料力学性能测试">
+        <div class="pc-img"><img src="img/products-studio/p21-1a.jpg" alt="全自动拉伸试验系统 机器人自动力学性能试验系统" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>机器人自动力学性能试验系统</h3>
+          <p class="pc-model">全自动拉伸试验系统</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>在无人值守的情况下，连续完成批量材料试样的自动装夹、尺寸自动测量、变形数据自动记录、试验数据自动分析</li>
+            <li>由机器人、电子式拉力试验机、横截面尺寸测量平台、全自动引伸计、对夹式平推夹具等构成</li>
+            <li>可不间断、高精度地完成批量试样的材料力学性能测试</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P21</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="shimadzu ags-x 高低温拉伸试验机 shimadzu 岛津 金属材料机械性能表征 testing machines for mechanical properties 测试抗拉强度、屈服强度、断裂伸长率、弹性模量（et）、应变硬化指数（n 值）、塑性应变比（r 值）、应力应变曲线 实现 iso6892（jis z2241）规定的多种材料的应变速率控制 最大载荷 300kn 选配高温（700℃）、低温（-196℃~室温）环境箱">
+        <div class="pc-img"><img src="img/products-studio/p21-1b.jpg" alt="SHIMADZU AGS-X 高低温拉伸试验机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>高低温拉伸试验机</h3>
+          <p class="pc-model">SHIMADZU AGS-X</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>测试抗拉强度、屈服强度、断裂伸长率、弹性模量（Et）、应变硬化指数（n 值）、塑性应变比（r 值）、应力应变曲线</li>
+            <li>实现 ISO6892（JIS Z2241）规定的多种材料的应变速率控制</li>
+            <li>最大载荷 300KN</li>
+            <li>选配高温（700℃）、低温（-196℃~室温）环境箱</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P21</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="液压万能系列 大载荷液压万能试验机 shimadzu 岛津 金属材料机械性能表征 testing machines for mechanical properties 高精度的应力及应变控制，适用于金属拉伸试验 大型彩色 lcd 触摸屏，大大提高操作性及可视性 最大载荷 2000kn">
+        <div class="pc-img"><img src="img/products-studio/p21-1c.jpg" alt="液压万能系列 大载荷液压万能试验机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>大载荷液压万能试验机</h3>
+          <p class="pc-model">液压万能系列</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>高精度的应力及应变控制，适用于金属拉伸试验</li>
+            <li>大型彩色 LCD 触摸屏，大大提高操作性及可视性</li>
+            <li>最大载荷 2000KN</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P21</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="冲击试验系列 金属摆锤冲击试验机 shimadzu 岛津 金属材料机械性能表征 testing machines for mechanical properties 检测金属材料的室温和低温冲击能量、冲击韧性、冲击能量曲线、韧脆转变温度 测试范围 0~300j">
+        <div class="pc-img"><img src="img/products-studio/p21-1d.jpg" alt="冲击试验系列 金属摆锤冲击试验机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>金属摆锤冲击试验机</h3>
+          <p class="pc-model">冲击试验系列</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>检测金属材料的室温和低温冲击能量、冲击韧性、冲击能量曲线、韧脆转变温度</li>
+            <li>测试范围 0~300J</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P21</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="蠕变持久系列 高温持久蠕变试验机 shimadzu 岛津 金属材料机械性能表征 testing machines for mechanical properties 测试金属材料的持久寿命、持久强度、蠕变伸长率、蠕变速率、应力腐蚀等性能 最大载荷 50kn，最高温度 700℃">
+        <div class="pc-img"><img src="img/products-studio/p21-1e.jpg" alt="蠕变持久系列 高温持久蠕变试验机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>高温持久蠕变试验机</h3>
+          <p class="pc-model">蠕变持久系列</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>测试金属材料的持久寿命、持久强度、蠕变伸长率、蠕变速率、应力腐蚀等性能</li>
+            <li>最大载荷 50KN，最高温度 700℃</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P21</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="shimadzu ehf-e 疲劳试验机 shimadzu 岛津 金属材料机械性能表征 testing machines for mechanical properties 检测材料的疲劳强度、裂纹扩展速率、kic、jic、ctod 以及疲劳腐蚀等参数 最大静载荷 ±120kn，最大动载荷 ±100kn 测量精度 0.5 级">
+        <div class="pc-img"><img src="img/products-studio/p21-1f.jpg" alt="SHIMADZU EHF-E 疲劳试验机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>疲劳试验机</h3>
+          <p class="pc-model">SHIMADZU EHF-E</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>检测材料的疲劳强度、裂纹扩展速率、KIC、JIC、CTOD 以及疲劳腐蚀等参数</li>
+            <li>最大静载荷 ±120KN，最大动载荷 ±100KN</li>
+            <li>测量精度 0.5 级</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P21</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="shimadzu ehf-t 扭转疲劳试验机 shimadzu 岛津 金属材料机械性能表征 testing machines for mechanical properties 用于金属材料的扭转疲劳性能检测 最大静载荷 ±15kn·m，最大动载荷 ±10kn·m 扭转角度 ±50°">
+        <div class="pc-img"><img src="img/products-studio/p21-1g.jpg" alt="SHIMADZU EHF-T 扭转疲劳试验机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>扭转疲劳试验机</h3>
+          <p class="pc-model">SHIMADZU EHF-T</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>用于金属材料的扭转疲劳性能检测</li>
+            <li>最大静载荷 ±15KN·m，最大动载荷 ±10KN·m</li>
+            <li>扭转角度 ±50°</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P21</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+    <section class="section cat" id="cat-polymer">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="t-eyebrow" data-rv>11 · Physical Properties for Polymer</p>
+          <h2 class="t-title" data-rv>高分子材料物性表征<span class="cat-n">16 款</span></h2>
+          <p class="t-body" data-rv style="margin-top:12px">覆盖塑料、橡胶、薄膜的拉伸、硬度、回弹、磨耗、冲击、摩擦、光学性能等全套物性测试。</p>
+        </div>
+        <div class="grid">
+      <article class="card pcard" data-rv="fade" data-kw="ags-x 10kn 万能材料试验机 shimadzu 岛津 高分子材料物性表征 physical properties for polymer 塑料：拉伸强度、延伸率、拉伸弹性模量、弯曲强度、弯曲模量等机械性能表征 橡胶、弹性体：扯断强度、扯断伸长率、定伸长应力、定应力伸长等表征，也可用于弹性材料低周疲劳测试 塑料薄膜：拉伸强度和断裂延伸率测试">
+        <div class="pc-img"><img src="img/products-studio/p22-1a.jpg" alt="AGS-X 10KN 万能材料试验机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>万能材料试验机</h3>
+          <p class="pc-model">AGS-X 10KN</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>塑料：拉伸强度、延伸率、拉伸弹性模量、弯曲强度、弯曲模量等机械性能表征</li>
+            <li>橡胶、弹性体：扯断强度、扯断伸长率、定伸长应力、定应力伸长等表征，也可用于弹性材料低周疲劳测试</li>
+            <li>塑料薄膜：拉伸强度和断裂延伸率测试</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P22</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="digi-chamber r 高低温硬度测试系统 gottmac 高铁 高分子材料物性表征 physical properties for polymer 通过混箱的温度调节模拟温度变化对橡胶硬度的影响 测试单位：shore a、d 或 iphdn 温度范围 -70℃~180℃">
+        <div class="pc-img"><img src="img/products-studio/p22-2a.jpg" alt="DIGI-CHAMBER R 高低温硬度测试系统" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>高低温硬度测试系统</h3>
+          <p class="pc-model">DIGI-CHAMBER R</p>
+          <p class="pc-brand">GOTTMAC 高铁</p>
+          <ul class="pc-specs">
+            <li>通过混箱的温度调节模拟温度变化对橡胶硬度的影响</li>
+            <li>测试单位：Shore A、D 或 IPHDN</li>
+            <li>温度范围 -70℃~180℃</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P22</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="hpe-ⅲ 邵氏硬度计 gottmac 高铁 高分子材料物性表征 physical properties for polymer 用于橡塑材料的 shore 硬度值测定 测头有 iphdm、n、h、l 共 4 种型号 可针对标准样品、薄样品、异形样品的硬度测量">
+        <div class="pc-img"><img src="img/products-studio/p22-2b.jpg" alt="HPE-Ⅲ 邵氏硬度计" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>邵氏硬度计</h3>
+          <p class="pc-model">HPE-Ⅲ</p>
+          <p class="pc-brand">GOTTMAC 高铁</p>
+          <ul class="pc-specs">
+            <li>用于橡塑材料的 Shore 硬度值测定</li>
+            <li>测头有 IPHDM、N、H、L 共 4 种型号</li>
+            <li>可针对标准样品、薄样品、异形样品的硬度测量</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P22</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="digitest-ii 国际橡胶硬度计 gottmac 高铁 高分子材料物性表征 physical properties for polymer 用于橡胶材料 irhd 硬度值测定 常用测头有 shore a/d/c 和 micro shore a/d/c 等多型号 可针对不同硬度特性的样品进行测量">
+        <div class="pc-img"><img src="img/products-studio/p22-1b.jpg" alt="DIGITEST-II 国际橡胶硬度计" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>国际橡胶硬度计</h3>
+          <p class="pc-model">DIGITEST-II</p>
+          <p class="pc-brand">GOTTMAC 高铁</p>
+          <ul class="pc-specs">
+            <li>用于橡胶材料 IRHD 硬度值测定</li>
+            <li>常用测头有 Shore A/D/C 和 Micro Shore A/D/C 等多型号</li>
+            <li>可针对不同硬度特性的样品进行测量</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P22</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="abm-ⅱ 滚筒磨耗试验机 gottmac 高铁 高分子材料物性表征 physical properties for polymer 符合 astm d5963 和 iso4649 标准 了解软弹性材质、橡胶、塑料等物体经摩擦受损后所消耗掉的容积及重量 可另选样品加热箱（最高至 100℃），模拟高温对不同配方样品的弹性影响">
+        <div class="pc-img"><img src="img/products-studio/p22-2c.jpg" alt="ABM-Ⅱ 滚筒磨耗试验机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>滚筒磨耗试验机</h3>
+          <p class="pc-model">ABM-Ⅱ</p>
+          <p class="pc-brand">GOTTMAC 高铁</p>
+          <ul class="pc-specs">
+            <li>符合 ASTM D5963 和 ISO4649 标准</li>
+            <li>了解软弹性材质、橡胶、塑料等物体经摩擦受损后所消耗掉的容积及重量</li>
+            <li>可另选样品加热箱（最高至 100℃），模拟高温对不同配方样品的弹性影响</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P22</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="digirebound 橡胶回弹试验机 gottmac 高铁 高分子材料物性表征 physical properties for polymer 全自动式的摆锤回弹试验机，电子设备独立于摆锤机构外，降低故障率 在产品需求校准和维修时提供更多便利 可另选滚筒加热装置，模拟橡胶等材料在高温状态下的磨损情况">
+        <div class="pc-img"><img src="img/products-studio/p22-1c.jpg" alt="DIGIREBOUND 橡胶回弹试验机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>橡胶回弹试验机</h3>
+          <p class="pc-model">DIGIREBOUND</p>
+          <p class="pc-brand">GOTTMAC 高铁</p>
+          <ul class="pc-specs">
+            <li>全自动式的摆锤回弹试验机，电子设备独立于摆锤机构外，降低故障率</li>
+            <li>在产品需求校准和维修时提供更多便利</li>
+            <li>可另选滚筒加热装置，模拟橡胶等材料在高温状态下的磨损情况</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P22</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="hda 150 全自动硬度/密度测试系统 gottmac 高铁 高分子材料物性表征 physical properties for polymer 硬度测试符合标准 din iso7619、din en iso868、astm d2240 密度测试符合标准 iso2781、din en iso1183-1、astm d1817 进料仓可放置达 50 个样品（φ36~42mm、t6mm），可供 1 小时自动测试">
+        <div class="pc-img"><img src="img/products-studio/p22-1d.jpg" alt="HDA 150 全自动硬度/密度测试系统" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>全自动硬度/密度测试系统</h3>
+          <p class="pc-model">HDA 150</p>
+          <p class="pc-brand">GOTTMAC 高铁</p>
+          <ul class="pc-specs">
+            <li>硬度测试符合标准 DIN ISO7619、DIN EN ISO868、ASTM D2240</li>
+            <li>密度测试符合标准 ISO2781、DIN EN ISO1183-1、ASTM D1817</li>
+            <li>进料仓可放置达 50 个样品（Φ36~42mm、T6mm），可供 1 小时自动测试</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P22</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="ba rotation o 型圈硬度自动测试系统 gottmac 高铁 高分子材料物性表征 physical properties for polymer 用于批量检测 o 型圈的硬度">
+        <div class="pc-img"><img src="img/products-studio/p22-2d.jpg" alt="BA ROTATION O 型圈硬度自动测试系统" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>O 型圈硬度自动测试系统</h3>
+          <p class="pc-model">BA ROTATION</p>
+          <p class="pc-brand">GOTTMAC 高铁</p>
+          <ul class="pc-specs">
+            <li>用于批量检测 O 型圈的硬度</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P22</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="low temperature check 低温脆化/低温回缩试验机 gottmac 高铁 高分子材料物性表征 physical properties for polymer 测试橡胶、弹性体低温回缩试验（tr）和低温脆性试验（bp）的一体机 tr 试验符合 astm d1329、iso2921、gb7758 bp 试验符合 iso812、astm d2137、gb/t 15256">
+        <div class="pc-img"><img src="img/products-studio/p23-2a.jpg" alt="LOW TEMPERATURE CHECK 低温脆化/低温回缩试验机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>低温脆化/低温回缩试验机</h3>
+          <p class="pc-model">LOW TEMPERATURE CHECK</p>
+          <p class="pc-brand">GOTTMAC 高铁</p>
+          <ul class="pc-specs">
+            <li>测试橡胶、弹性体低温回缩试验（TR）和低温脆性试验（BP）的一体机</li>
+            <li>TR 试验符合 ASTM D1329、ISO2921、GB7758</li>
+            <li>BP 试验符合 ISO812、ASTM D2137、GB/T 15256</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P23</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="dm2700p 偏光显微镜 labom 乐普 高分子材料物性表征 physical properties for polymer 用于研究透明与不透明各向异性材料的显微镜 可鉴别某一物质是单折射性（各向同性）或双折射性（各向异性） 凡具有双折射的物质，在偏光显微镜下就能分辨得清楚">
+        <div class="pc-img"><img src="img/products-studio/p23-1.jpg" alt="DM2700P 偏光显微镜" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>偏光显微镜</h3>
+          <p class="pc-model">DM2700P</p>
+          <p class="pc-brand">LABOM 乐普</p>
+          <ul class="pc-specs">
+            <li>用于研究透明与不透明各向异性材料的显微镜</li>
+            <li>可鉴别某一物质是单折射性（各向同性）或双折射性（各向异性）</li>
+            <li>凡具有双折射的物质，在偏光显微镜下就能分辨得清楚</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P23</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="de mattia-env 德默西亚疲劳试验机 gottmac 高铁 高分子材料物性表征 physical properties for polymer 测试硫化橡胶对反复形变的耐受能力，可执行屈挠龟裂和伸张疲劳测试 样品可安装在控温箱内，有加热控温箱和低温控温箱两种 符合标准 iso132、iso6943、astm d430-b、din53522-1/2/3、gb/t13934">
+        <div class="pc-img"><img src="img/products-studio/p23-2b.jpg" alt="DE MATTIA-ENV 德默西亚疲劳试验机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>德默西亚疲劳试验机</h3>
+          <p class="pc-model">DE MATTIA-ENV</p>
+          <p class="pc-brand">GOTTMAC 高铁</p>
+          <ul class="pc-specs">
+            <li>测试硫化橡胶对反复形变的耐受能力，可执行屈挠龟裂和伸张疲劳测试</li>
+            <li>样品可安装在控温箱内，有加热控温箱和低温控温箱两种</li>
+            <li>符合标准 ISO132、ISO6943、ASTM D430-B、DIN53522-1/2/3、GB/T13934</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P23</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="4775 雾度仪 nyec 纽约 高分子材料物性表征 physical properties for polymer 当光线透过透明产品发生散射行为时，会产生混浊或模糊不清的外观 透射雾影仪这一客观衡量标准可以量化人们的感受 测量全透过率 / 透射雾影 / 透视清晰度">
+        <div class="pc-img"><img src="img/products-studio/p23-3b.jpg" alt="4775 雾度仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>雾度仪</h3>
+          <p class="pc-model">4775</p>
+          <p class="pc-brand">NYEC 纽约</p>
+          <ul class="pc-specs">
+            <li>当光线透过透明产品发生散射行为时，会产生混浊或模糊不清的外观</li>
+            <li>透射雾影仪这一客观衡量标准可以量化人们的感受</li>
+            <li>测量全透过率 / 透射雾影 / 透视清晰度</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P23</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="it 504 塑料摆锤冲击试验机 gottmac 高铁 高分子材料物性表征 physical properties for polymer 用于塑料材料抗摆锤冲击性能检测，可选用简支梁冲击法、悬臂梁冲击法 符合 astm d256、iso179、iso180、astm d6110、astm d4812、astm d4508、astm d950 及其它相关标准">
+        <div class="pc-img"><img src="img/products-studio/p23-2c.jpg" alt="IT 504 塑料摆锤冲击试验机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>塑料摆锤冲击试验机</h3>
+          <p class="pc-model">IT 504</p>
+          <p class="pc-brand">GOTTMAC 高铁</p>
+          <ul class="pc-specs">
+            <li>用于塑料材料抗摆锤冲击性能检测，可选用简支梁冲击法、悬臂梁冲击法</li>
+            <li>符合 ASTM D256、ISO179、ISO180、ASTM D6110、ASTM D4812、ASTM D4508、ASTM D950 及其它相关标准</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P23</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="4563 光泽度仪 nyec 纽约 高分子材料物性表征 physical properties for polymer 在正确的角度下观察产品的光泽度变化 集 20°、60°、85° 三个角度在一台仪器上 使您能符合国际标准并迅速发现质量的变化">
+        <div class="pc-img"><img src="img/products-studio/p23-3c.jpg" alt="4563 光泽度仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>光泽度仪</h3>
+          <p class="pc-model">4563</p>
+          <p class="pc-brand">NYEC 纽约</p>
+          <ul class="pc-specs">
+            <li>在正确的角度下观察产品的光泽度变化</li>
+            <li>集 20°、60°、85° 三个角度在一台仪器上</li>
+            <li>使您能符合国际标准并迅速发现质量的变化</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P23</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="fp-2260 薄膜摩擦系数试验机 gottmac 高铁 高分子材料物性表征 physical properties for polymer 测量塑料薄膜、标签、包装材料的静态摩擦系数及动态摩擦系数 增加配件也可测试密封强度和剥离性能 符合 astm d1894、iso8295、gb 10006-88、yc/t266-2008">
+        <div class="pc-img"><img src="img/products-studio/p23-2d.jpg" alt="FP-2260 薄膜摩擦系数试验机" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>薄膜摩擦系数试验机</h3>
+          <p class="pc-model">FP-2260</p>
+          <p class="pc-brand">GOTTMAC 高铁</p>
+          <ul class="pc-specs">
+            <li>测量塑料薄膜、标签、包装材料的静态摩擦系数及动态摩擦系数</li>
+            <li>增加配件也可测试密封强度和剥离性能</li>
+            <li>符合 ASTM D1894、ISO8295、GB 10006-88、YC/T266-2008</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P23</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="uv-3600 分光光度计 shimadzu 岛津 高分子材料物性表征 physical properties for polymer 用于光学薄膜透过率、反射率测试 选配积分球，分析波长范围从紫外区扩大至 1400nm 近红外区">
+        <div class="pc-img"><img src="img/products-studio/p23-5.jpg" alt="UV-3600 分光光度计" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>分光光度计</h3>
+          <p class="pc-model">UV-3600</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>用于光学薄膜透过率、反射率测试</li>
+            <li>选配积分球，分析波长范围从紫外区扩大至 1400nm 近红外区</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P23</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+    <section class="section cat section--alt" id="cat-rheology">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="t-eyebrow" data-rv>12 · Rheological Properties</p>
+          <h2 class="t-title" data-rv>高分子材料流变性能表征<span class="cat-n">5 款</span></h2>
+          <p class="t-body" data-rv style="margin-top:12px">毛细管流变、旋转流变、熔融指数与橡胶硫化/门尼粘度测试，服务于配方研发与加工条件优化。</p>
+        </div>
+        <div class="grid">
+      <article class="card pcard" data-rv="fade" data-kw="cft-500ex 毛细管流变仪 shimadzu 岛津 高分子材料流变性能表征 rheological properties 评价塑料、粘着剂、橡胶、涂料等材料的流动性和热特性 通过测量热塑性树脂的熔融粘度，选择加工时的温度、压力、流出速度等条件 可通过流动曲线测量热固化型树脂的硬化时间">
+        <div class="pc-img"><img src="img/products-studio/p24-1a.jpg" alt="CFT-500EX 毛细管流变仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>毛细管流变仪</h3>
+          <p class="pc-model">CFT-500EX</p>
+          <p class="pc-brand">SHIMADZU 岛津</p>
+          <ul class="pc-specs">
+            <li>评价塑料、粘着剂、橡胶、涂料等材料的流动性和热特性</li>
+            <li>通过测量热塑性树脂的熔融粘度，选择加工时的温度、压力、流出速度等条件</li>
+            <li>可通过流动曲线测量热固化型树脂的硬化时间</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P24</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="mcr 系列 旋转流变仪 anton paar 安东帕 高分子材料流变性能表征 rheological properties 模块化智能型高级流变仪，完全模块化、智能化设计，扩展功能强大且操作简便 控温系统：帕尔帖（peltier）加热、电加热、对流加热炉、水浴控温等 夹具系统：锥/板、平板、同轴圆筒、固体与薄膜/纤维 dmta 夹具、熔体拉伸夹具、双锥夹具、可抛弃型夹具、桨式夹具及特殊材质夹具等">
+        <div class="pc-img"><img src="img/products-studio/p24-1b.jpg" alt="MCR 系列 旋转流变仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>旋转流变仪</h3>
+          <p class="pc-model">MCR 系列</p>
+          <p class="pc-brand">ANTON PAAR 安东帕</p>
+          <ul class="pc-specs">
+            <li>模块化智能型高级流变仪，完全模块化、智能化设计，扩展功能强大且操作简便</li>
+            <li>控温系统：帕尔帖（Peltier）加热、电加热、对流加热炉、水浴控温等</li>
+            <li>夹具系统：锥/板、平板、同轴圆筒、固体与薄膜/纤维 DMTA 夹具、熔体拉伸夹具、双锥夹具、可抛弃型夹具、桨式夹具及特殊材质夹具等</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P24</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="mp1200p 熔融指数测定仪 gottmac 高铁 高分子材料流变性能表征 rheological properties 符合 astm d1238、d3364、iso1133-1 与 2、bs2782、din 53735、jis k7210 在触摸屏上简单设定试验条件，测试结果直接在触摸屏上显示 工作温度最大 450℃，温度控制 ±0.1℃">
+        <div class="pc-img"><img src="img/products-studio/p24-1c.jpg" alt="MP1200P 熔融指数测定仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>熔融指数测定仪</h3>
+          <p class="pc-model">MP1200P</p>
+          <p class="pc-brand">GOTTMAC 高铁</p>
+          <ul class="pc-specs">
+            <li>符合 ASTM D1238、D3364、ISO1133-1 与 2、BS2782、DIN 53735、JIS K7210</li>
+            <li>在触摸屏上简单设定试验条件，测试结果直接在触摸屏上显示</li>
+            <li>工作温度最大 450℃，温度控制 ±0.1℃</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P24</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="mooneycheck profile 无转子硫化仪 gottmac 高铁 高分子材料流变性能表征 rheological properties 符合 astm d5289、iso6502 测定橡胶硫化过程的焦烧时间、正硫化时间、硫化速率、粘弹性模量以及硫化平坦期等性能指标">
+        <div class="pc-img"><img src="img/products-studio/p24-1d.jpg" alt="MOONEYCHECK PROFILE 无转子硫化仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>无转子硫化仪</h3>
+          <p class="pc-model">MOONEYCHECK PROFILE</p>
+          <p class="pc-brand">GOTTMAC 高铁</p>
+          <ul class="pc-specs">
+            <li>符合 ASTM D5289、ISO6502</li>
+            <li>测定橡胶硫化过程的焦烧时间、正硫化时间、硫化速率、粘弹性模量以及硫化平坦期等性能指标</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P24</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="rheocheck profile-md 门尼粘度计 gottmac 高铁 高分子材料流变性能表征 rheological properties 符合 astm d1646、iso289 测试生胶（天然胶及合成胶）或混炼胶的门尼粘度、应力松弛时间与早期加硫特性">
+        <div class="pc-img"><img src="img/products-studio/p24-1e.jpg" alt="RHEOCHECK PROFILE-MD 门尼粘度计" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>门尼粘度计</h3>
+          <p class="pc-model">RHEOCHECK PROFILE-MD</p>
+          <p class="pc-brand">GOTTMAC 高铁</p>
+          <ul class="pc-specs">
+            <li>符合 ASTM D1646、ISO289</li>
+            <li>测试生胶（天然胶及合成胶）或混炼胶的门尼粘度、应力松弛时间与早期加硫特性</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P24</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+    <section class="section cat" id="cat-aging">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="t-eyebrow" data-rv>13 · Environmental Aging Chamber</p>
+          <h2 class="t-title" data-rv>高分子材料耐环境可靠性评价<span class="cat-n">4 款</span></h2>
+          <p class="t-body" data-rv style="margin-top:12px">氙灯、紫外、臭氧与热老化四类环境模拟设备，用于评价材料在光、氧、热、臭氧作用下的老化行为。</p>
+        </div>
+        <div class="grid">
+      <article class="card pcard" data-rv="fade" data-kw="atlas cl3000+ 氙灯老化试验箱 atlas 高分子材料耐环境可靠性评价 environmental aging chamber 满足全球几乎所有主要氙灯耐候试验标准，可直接调用（astm g155-1/g155-4、iso 105 b06/b02/b04、iso4892-2、iso 11341、jasom346、gmw3414、sae j1885/j2412/j1960/j2527、aatcc 16-3/16e 等） 世界光老化领域第一品牌，具有无与伦比的认可度和权威性 全球众多汽车、涂料、纺织、高分子材料和建材制造商及权威研究机构指定型号 放样量大，满箱可放 20 个标样（70×145mm），适合商业检验及研发运行">
+        <div class="pc-img"><img src="img/products-studio/p25-1a.jpg" alt="ATLAS CL3000+ 氙灯老化试验箱" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>氙灯老化试验箱</h3>
+          <p class="pc-model">ATLAS CL3000+</p>
+          <p class="pc-brand">ATLAS</p>
+          <ul class="pc-specs">
+            <li>满足全球几乎所有主要氙灯耐候试验标准，可直接调用（ASTM G155-1/G155-4、ISO 105 B06/B02/B04、ISO4892-2、ISO 11341、JASOM346、GMW3414、SAE J1885/J2412/J1960/J2527、AATCC 16-3/16E 等）</li>
+            <li>世界光老化领域第一品牌，具有无与伦比的认可度和权威性</li>
+            <li>全球众多汽车、涂料、纺织、高分子材料和建材制造商及权威研究机构指定型号</li>
+            <li>放样量大，满箱可放 20 个标样（70×145mm），适合商业检验及研发运行</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P25</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="atlas uv-test 紫外老化试验箱 atlas 高分子材料耐环境可靠性评价 environmental aging chamber 满足国际标准 astm g53、d4329、d4587、d5208、g154、iso4892-3 等 大容量编程控制：明暗周期、试验时间、黑板温度等参数设置 黑板温度直接设定与闭环自动控制（30~90℃，控制精度 ±2℃） 水温加热自动控制（30~60℃），暗周期产生水蒸气，在较冷样品表面形成冷凝露水 喷淋装置模拟下雨时的温度剧变和雨水侵蚀，共 12 个喷嘴，喷洒均匀">
+        <div class="pc-img"><img src="img/products-studio/p25-1b.jpg" alt="ATLAS UV-TEST 紫外老化试验箱" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>紫外老化试验箱</h3>
+          <p class="pc-model">ATLAS UV-TEST</p>
+          <p class="pc-brand">ATLAS</p>
+          <ul class="pc-specs">
+            <li>满足国际标准 ASTM G53、D4329、D4587、D5208、G154、ISO4892-3 等</li>
+            <li>大容量编程控制：明暗周期、试验时间、黑板温度等参数设置</li>
+            <li>黑板温度直接设定与闭环自动控制（30~90℃，控制精度 ±2℃）</li>
+            <li>水温加热自动控制（30~60℃），暗周期产生水蒸气，在较冷样品表面形成冷凝露水</li>
+            <li>喷淋装置模拟下雨时的温度剧变和雨水侵蚀，共 12 个喷嘴，喷洒均匀</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P25</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="gibitre ozone check 臭氧老化试验箱 gibitre 高分子材料耐环境可靠性评价 environmental aging chamber 用于评价橡胶样品的耐臭氧性能 符合 iso1431、3011、7326，astm d1149、4575、3395、518，din53509 及 gb/t7762、gb/t13642 臭氧浓度 0~500pphm（紫外吸收检测器），精度 ±3% 实验温度室温+15℃~+80℃，湿度控制范围 40%~90%（可选） 155l 圆柱型不锈钢实验舱，带内部照明灯和观测窗口；用于静态测试的行星齿轮旋转架">
+        <div class="pc-img"><img src="img/products-studio/p25-1c.jpg" alt="GIBITRE OZONE CHECK 臭氧老化试验箱" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>臭氧老化试验箱</h3>
+          <p class="pc-model">GIBITRE OZONE CHECK</p>
+          <p class="pc-brand">GIBITRE</p>
+          <ul class="pc-specs">
+            <li>用于评价橡胶样品的耐臭氧性能</li>
+            <li>符合 ISO1431、3011、7326，ASTM D1149、4575、3395、518，DIN53509 及 GB/T7762、GB/T13642</li>
+            <li>臭氧浓度 0~500pphm（紫外吸收检测器），精度 ±3%</li>
+            <li>实验温度室温+15℃~+80℃，湿度控制范围 40%~90%（可选）</li>
+            <li>155L 圆柱型不锈钢实验舱，带内部照明灯和观测窗口；用于静态测试的行星齿轮旋转架</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P25</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="binder fed56 热老化烘箱 binder 宾德 高分子材料耐环境可靠性评价 environmental aging chamber 用于评价橡胶制品在储存或使用过程中，因同时受到热和空气中氧的作用而发生老化的情况 采用强制对流系统">
+        <div class="pc-img"><img src="img/products-studio/p25-1d.jpg" alt="BINDER FED56 热老化烘箱" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>热老化烘箱</h3>
+          <p class="pc-model">BINDER FED56</p>
+          <p class="pc-brand">BINDER 宾德</p>
+          <ul class="pc-specs">
+            <li>用于评价橡胶制品在储存或使用过程中，因同时受到热和空气中氧的作用而发生老化的情况</li>
+            <li>采用强制对流系统</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P25</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+    <section class="section cat section--alt" id="cat-thermal-analysis">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="t-eyebrow" data-rv>14 · Thermal Analyzer</p>
+          <h2 class="t-title" data-rv>高分子材料热分析系统<span class="cat-n">6 款</span></h2>
+          <p class="t-body" data-rv style="margin-top:12px">METTLER TOLEDO 梅特勒-托利多四十多年来一直是世界热分析仪器的主要制造商，测量物质物理性质与温度之间的关系。</p>
+        </div>
+        <div class="grid">
+      <article class="card pcard" data-rv="fade" data-kw="mettler dma 系列 动态热机械分析仪 mettler toledo 梅特勒 高分子材料热分析系统 thermal analyzer 测定在周期性振动应力下，材料随时间、温度或频率变化而变化的力学性能和粘弹性能 频率高达 1000hz，通过专门的力传感器准确测定模量 应力控制模式与应变控制模式，两者自动切换">
+        <div class="pc-img"><img src="img/products-studio/p26-2a.jpg" alt="METTLER DMA 系列 动态热机械分析仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>动态热机械分析仪</h3>
+          <p class="pc-model">METTLER DMA 系列</p>
+          <p class="pc-brand">METTLER TOLEDO 梅特勒</p>
+          <ul class="pc-specs">
+            <li>测定在周期性振动应力下，材料随时间、温度或频率变化而变化的力学性能和粘弹性能</li>
+            <li>频率高达 1000Hz，通过专门的力传感器准确测定模量</li>
+            <li>应力控制模式与应变控制模式，两者自动切换</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P26</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="mettler tma 系列 热机械分析仪 mettler toledo 梅特勒 高分子材料热分析系统 thermal analyzer 测量材料随温度变化而变化的尺寸，热膨胀和软化温度测定是其重要应用 瑞士精密机械技术的体现，提供纳米级分辨率，能够测量极其微小的尺寸变化">
+        <div class="pc-img"><img src="img/products-studio/p26-2b.jpg" alt="METTLER TMA 系列 热机械分析仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>热机械分析仪</h3>
+          <p class="pc-model">METTLER TMA 系列</p>
+          <p class="pc-brand">METTLER TOLEDO 梅特勒</p>
+          <ul class="pc-specs">
+            <li>测量材料随温度变化而变化的尺寸，热膨胀和软化温度测定是其重要应用</li>
+            <li>瑞士精密机械技术的体现，提供纳米级分辨率，能够测量极其微小的尺寸变化</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P26</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="mettler dsc 系列 差示扫描量热仪 mettler toledo 梅特勒 高分子材料热分析系统 thermal analyzer 测量样品由于物理和化学性质变化而发生的焓变与温度或时间的关系 配备 120 对热电偶的专利传感器，dsc 具有无与伦比的灵敏度">
+        <div class="pc-img"><img src="img/products-studio/p26-2c.jpg" alt="METTLER DSC 系列 差示扫描量热仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>差示扫描量热仪</h3>
+          <p class="pc-model">METTLER DSC 系列</p>
+          <p class="pc-brand">METTLER TOLEDO 梅特勒</p>
+          <ul class="pc-specs">
+            <li>测量样品由于物理和化学性质变化而发生的焓变与温度或时间的关系</li>
+            <li>配备 120 对热电偶的专利传感器，DSC 具有无与伦比的灵敏度</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P26</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="mettler tga 系列 热重分析仪 mettler toledo 梅特勒 高分子材料热分析系统 thermal analyzer 用于材料中的组分含量分析、热稳定性分析、添加剂与填充剂影响等 在整个测试范围内具有超微克级的分辨率">
+        <div class="pc-img"><img src="img/products-studio/p26-2d.jpg" alt="METTLER TGA 系列 热重分析仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>热重分析仪</h3>
+          <p class="pc-model">METTLER TGA 系列</p>
+          <p class="pc-brand">METTLER TOLEDO 梅特勒</p>
+          <ul class="pc-specs">
+            <li>用于材料中的组分含量分析、热稳定性分析、添加剂与填充剂影响等</li>
+            <li>在整个测试范围内具有超微克级的分辨率</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P26</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="mettler mp 系列 熔点仪 mettler toledo 梅特勒 高分子材料热分析系统 thermal analyzer 用于晶体变化、热致变色等观察 温度范围：室温 ~350℃">
+        <div class="pc-img"><img src="img/products-studio/p26-2e.jpg" alt="METTLER MP 系列 熔点仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>熔点仪</h3>
+          <p class="pc-model">METTLER MP 系列</p>
+          <p class="pc-brand">METTLER TOLEDO 梅特勒</p>
+          <ul class="pc-specs">
+            <li>用于晶体变化、热致变色等观察</li>
+            <li>温度范围：室温 ~350℃</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P26</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="mettler ts 系列 显微热台 mettler toledo 梅特勒 高分子材料热分析系统 thermal analyzer 用于进行样品加热和冷却，并同时在显微镜下观察 温度范围 rt~375℃，选配冷却系统 -90℃~375℃">
+        <div class="pc-img"><img src="img/products-studio/p26-2f.jpg" alt="METTLER TS 系列 显微热台" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>显微热台</h3>
+          <p class="pc-model">METTLER TS 系列</p>
+          <p class="pc-brand">METTLER TOLEDO 梅特勒</p>
+          <ul class="pc-specs">
+            <li>用于进行样品加热和冷却，并同时在显微镜下观察</li>
+            <li>温度范围 RT~375℃，选配冷却系统 -90℃~375℃</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P26</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+    <section class="section cat" id="cat-semi">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="t-eyebrow" data-rv>15 · Semiconductor / PCB / Electronic Material</p>
+          <h2 class="t-title" data-rv>半导体 / PCB / 电子材料检测<span class="cat-n">10 款</span></h2>
+          <p class="t-body" data-rv style="margin-top:12px">从晶圆在片测试探针台到电镜、能谱、膜厚与轮廓测量，覆盖半导体与电子材料的微观检测链路。</p>
+        </div>
+        <div class="grid">
+      <article class="card pcard" data-rv="fade" data-kw="pxb-be 系列 优化型探针台 maps 迈时 半导体 / pcb / 电子材料检测 semiconductor / pcb / electronic material 4~12 英寸多款手动、半自动和全自动探针台设备及配件，在国内同行业处于领先地位 核心系统集成化软件 easylink，可轻松连接所有设备的通用测试平台，主要应用于晶圆在片测试领域 定制化探卡服务：可量身定做温控环境、高压环境、磁场环境和辐射环境测试等需求">
+        <div class="pc-img"><img src="img/products-studio/p27-1.jpg" alt="PXB-BE 系列 优化型探针台" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>优化型探针台</h3>
+          <p class="pc-model">PXB-BE 系列</p>
+          <p class="pc-brand">MAPS 迈时</p>
+          <ul class="pc-specs">
+            <li>4~12 英寸多款手动、半自动和全自动探针台设备及配件，在国内同行业处于领先地位</li>
+            <li>核心系统集成化软件 EasyLink，可轻松连接所有设备的通用测试平台，主要应用于晶圆在片测试领域</li>
+            <li>定制化探卡服务：可量身定做温控环境、高压环境、磁场环境和辐射环境测试等需求</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P27</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="jsm-it810 扫描电子显微镜 jeol 日本电子 半导体 / pcb / 电子材料检测 semiconductor / pcb / electronic material 用于材料和电子器件失效分析的微观观察 同时具有超高分辨率和大景深的特点 根据观察效果不同，可选择钨灯丝电镜和场发射电镜 典型应用：铜箔表面形貌与铜瘤检查、铜箔毛面与粘结片树脂剥离后的微观形貌、焊点失效时合金层形貌、键合不良时焊点微观形貌">
+        <div class="pc-img"><img src="img/products-studio/p27-2.jpg" alt="JSM-IT810 扫描电子显微镜" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>扫描电子显微镜</h3>
+          <p class="pc-model">JSM-IT810</p>
+          <p class="pc-brand">JEOL 日本电子</p>
+          <ul class="pc-specs">
+            <li>用于材料和电子器件失效分析的微观观察</li>
+            <li>同时具有超高分辨率和大景深的特点</li>
+            <li>根据观察效果不同，可选择钨灯丝电镜和场发射电镜</li>
+            <li>典型应用：铜箔表面形貌与铜瘤检查、铜箔毛面与粘结片树脂剥离后的微观形貌、焊点失效时合金层形貌、键合不良时焊点微观形貌</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P27</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="jed-2300 / 2300f x 射线能谱分析仪 jeol 日本电子 半导体 / pcb / 电子材料检测 semiconductor / pcb / electronic material eds 通过检测被电子束激发的样品特征 x 射线，确定样品含有的元素及成分比 可进行微区的点分析、线分析及面分析 典型应用：分层起泡位置异物的判别、图镀镍金表面元素分析">
+        <div class="pc-img"><img src="img/products-studio/p27-3.jpg" alt="JED-2300 / 2300F X 射线能谱分析仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>X 射线能谱分析仪</h3>
+          <p class="pc-model">JED-2300 / 2300F</p>
+          <p class="pc-brand">JEOL 日本电子</p>
+          <ul class="pc-specs">
+            <li>EDS 通过检测被电子束激发的样品特征 X 射线，确定样品含有的元素及成分比</li>
+            <li>可进行微区的点分析、线分析及面分析</li>
+            <li>典型应用：分层起泡位置异物的判别、图镀镍金表面元素分析</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P27</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="bx53m-ir 红外显微镜 olympus 奥林巴斯 半导体 / pcb / 电子材料检测 semiconductor / pcb / electronic material si（硅）、gaas（砷化镓）等半导体材料有良好的红外光透过性 红外显微镜可用于观察这类半导体器件的内部结构">
+        <div class="pc-img"><img src="img/products-studio/p27-4.jpg" alt="BX53M-IR 红外显微镜" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>红外显微镜</h3>
+          <p class="pc-model">BX53M-IR</p>
+          <p class="pc-brand">OLYMPUS 奥林巴斯</p>
+          <ul class="pc-specs">
+            <li>Si（硅）、GaAs（砷化镓）等半导体材料有良好的红外光透过性</li>
+            <li>红外显微镜可用于观察这类半导体器件的内部结构</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P27</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="tosca 原子力显微镜 bruker 布鲁克 半导体 / pcb / 电子材料检测 semiconductor / pcb / electronic material 研究材料纳米尺度上各类特性 测量材料的电学、磁学、力学、电化学等各项性质">
+        <div class="pc-img"><img src="img/products-studio/p27-5.jpg" alt="TOSCA 原子力显微镜" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>原子力显微镜</h3>
+          <p class="pc-model">TOSCA</p>
+          <p class="pc-brand">BRUKER 布鲁克</p>
+          <ul class="pc-specs">
+            <li>研究材料纳米尺度上各类特性</li>
+            <li>测量材料的电学、磁学、力学、电化学等各项性质</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P27</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="proforma 300i 硅片测厚仪 aceret 半导体 / pcb / 电子材料检测 semiconductor / pcb / electronic material 晶圆几何特性检测设备，包括从手动到全自动的系列产品 检测几何参数：thickness、ttv、bow、warp、flatness 采用独特的 push/pull 电容传感测试技术，可测试 gaas、sic、si 等半导体材料 可监测高阻率材料">
+        <div class="pc-img"><img src="img/products-studio/p28-1.jpg" alt="PROFORMA 300I 硅片测厚仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>硅片测厚仪</h3>
+          <p class="pc-model">PROFORMA 300I</p>
+          <p class="pc-brand">ACERET</p>
+          <ul class="pc-specs">
+            <li>晶圆几何特性检测设备，包括从手动到全自动的系列产品</li>
+            <li>检测几何参数：Thickness、TTV、Bow、Warp、Flatness</li>
+            <li>采用独特的 Push/Pull 电容传感测试技术，可测试 GaAs、SiC、Si 等半导体材料</li>
+            <li>可监测高阻率材料</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P28</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="d600 台阶仪 kla 半导体 / pcb / 电子材料检测 semiconductor / pcb / electronic material 探针式轮廓仪，支持台阶高度和粗糙度的 2d 及 3d 轮廓扫描，以及翘曲度和应力的 2d 测量 探针测量技术的优点是直接测量，与材料特性无关 可调节触力以及探针的选择，使其可对各种结构和材料进行精确测量">
+        <div class="pc-img"><img src="img/products-studio/p28-2.jpg" alt="D600 台阶仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>台阶仪</h3>
+          <p class="pc-model">D600</p>
+          <p class="pc-brand">KLA</p>
+          <ul class="pc-specs">
+            <li>探针式轮廓仪，支持台阶高度和粗糙度的 2D 及 3D 轮廓扫描，以及翘曲度和应力的 2D 测量</li>
+            <li>探针测量技术的优点是直接测量，与材料特性无关</li>
+            <li>可调节触力以及探针的选择，使其可对各种结构和材料进行精确测量</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P28</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="dcm8 光学轮廓仪 wyko 半导体 / pcb / 电子材料检测 semiconductor / pcb / electronic material 也叫激光共聚焦显微镜，采用最新的非接触式三维光学表面测量技术 融合高清晰度共聚焦显微镜和干涉测量技术优点的多功能双核系统 设计用于提高您的工作效率">
+        <div class="pc-img"><img src="img/products-studio/p28-3.jpg" alt="DCM8 光学轮廓仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>光学轮廓仪</h3>
+          <p class="pc-model">DCM8</p>
+          <p class="pc-brand">WYKO</p>
+          <ul class="pc-specs">
+            <li>也叫激光共聚焦显微镜，采用最新的非接触式三维光学表面测量技术</li>
+            <li>融合高清晰度共聚焦显微镜和干涉测量技术优点的多功能双核系统</li>
+            <li>设计用于提高您的工作效率</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P28</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="f50 膜厚仪 filmetrics 半导体 / pcb / 电子材料检测 semiconductor / pcb / electronic material 光谱反射仪使用非接触技术，不需要任何样本准备即可测量厚度 只需一秒钟分析从薄膜反射的光，就可确定薄膜厚度和折射率 光谱反射仪还可以测量多层薄膜">
+        <div class="pc-img"><img src="img/products-studio/p28-4.jpg" alt="F50 膜厚仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>膜厚仪</h3>
+          <p class="pc-model">F50</p>
+          <p class="pc-brand">FILMETRICS</p>
+          <ul class="pc-specs">
+            <li>光谱反射仪使用非接触技术，不需要任何样本准备即可测量厚度</li>
+            <li>只需一秒钟分析从薄膜反射的光，就可确定薄膜厚度和折射率</li>
+            <li>光谱反射仪还可以测量多层薄膜</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P28</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+      <article class="card pcard" data-rv="fade" data-kw="film sense 椭偏仪 spec 半导体 / pcb / 电子材料检测 semiconductor / pcb / electronic material 通过椭偏参数、透射/反射率等参数的测量，快速实现光学参数薄膜和纳米结构的表征分析 适用于薄膜材料的快速测量表征">
+        <div class="pc-img"><img src="img/products-studio/p28-5.jpg" alt="FILM SENSE 椭偏仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>椭偏仪</h3>
+          <p class="pc-model">FILM SENSE</p>
+          <p class="pc-brand">SPEC</p>
+          <ul class="pc-specs">
+            <li>通过椭偏参数、透射/反射率等参数的测量，快速实现光学参数薄膜和纳米结构的表征分析</li>
+            <li>适用于薄膜材料的快速测量表征</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P28</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+    <section class="section cat section--alt" id="cat-pd">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="t-eyebrow" data-rv>16 · High-Voltage Partial Discharge Monitoring</p>
+          <h2 class="t-title" data-rv>高压局放监测<span class="cat-n">1 款</span></h2>
+          <p class="t-body" data-rv style="margin-top:12px">通过特高频传感器、超声波探头及高频电流互感器等非侵入式手段捕捉局放信号，精准定位绝缘缺陷并量化放电强度，为状态检修与设备寿命评估提供数据支撑。</p>
+        </div>
+        <div class="grid">
+      <article class="card pcard" data-rv="fade" data-kw="ec4000pd/l 智能数字化局部放电带电检测与定位仪 公司自研 高压局放监测 high-voltage partial discharge monitoring 特高频时差定位：双通道 uhf 同时检测，内置示波器及算法，可实现时差定位 暂态地电压时差定位：双通道 tev 同时检测，内置示波器及算法，可实现时差定位 高频电流回波反射定位：支持 hfct 回波反射定位法 纳秒级实时监测变压器、电缆、开关柜等设备内部的微弱放电活动，有效预警绝缘劣化风险 结合数字信号处理与 ai 模式识别，支持在线检测，具备高灵敏度和抗干扰能力 可检测缺陷类型：绝缘件表面污秽/受潮凝露、高压母线连接处及断路器触头接触不良、导体表面金属突起、柜体内可移动金属微粒、开关元件内部放电缺陷、金属突出物、自由金属微粒、绝缘缺陷、悬浮电位缺陷">
+        <div class="pc-img"><img src="img/products-studio/p29-2.jpg" alt="EC4000PD/L 智能数字化局部放电带电检测与定位仪" loading="lazy" decoding="async"></div>
+        <div class="pc-body">
+          <h3>智能数字化局部放电带电检测与定位仪</h3>
+          <p class="pc-model">EC4000PD/L</p>
+          <p class="pc-brand">公司自研</p>
+          <ul class="pc-specs">
+            <li>特高频时差定位：双通道 UHF 同时检测，内置示波器及算法，可实现时差定位</li>
+            <li>暂态地电压时差定位：双通道 TEV 同时检测，内置示波器及算法，可实现时差定位</li>
+            <li>高频电流回波反射定位：支持 HFCT 回波反射定位法</li>
+            <li>纳秒级实时监测变压器、电缆、开关柜等设备内部的微弱放电活动，有效预警绝缘劣化风险</li>
+            <li>结合数字信号处理与 AI 模式识别，支持在线检测，具备高灵敏度和抗干扰能力</li>
+            <li>可检测缺陷类型：绝缘件表面污秽/受潮凝露、高压母线连接处及断路器触头接触不良、导体表面金属突起、柜体内可移动金属微粒、开关元件内部放电缺陷、金属突出物、自由金属微粒、绝缘缺陷、悬浮电位缺陷</li>
+          </ul>
+          <div class="pc-foot"><span>画册 P29</span><a class="link-arrow" href="tel:18018579934">询价 <span class="ar">›</span></a></div>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+
+<div class="wrap"><p class="pc-none" id="pc-none" hidden>画册里没搜到这个关键词：<b id="pc-none-q"></b>。常备型号不止这些，把参数或品牌发过来我们查：<a class="link-arrow" href="tel:18018579934">180-1857-9934 <span class="ar">›</span></a></p></div>
+
+<!-- ============ 收尾询价 ============ -->
+<section class="section section--dark" id="ask">
+  <div class="wrap" style="text-align:center">
+    <p class="t-eyebrow" data-rv>Need a quote</p>
+    <h2 class="t-title" data-rv style="max-width:24ch;margin:0 auto">没找到要的型号？说应用场景就行</h2>
+    <p class="t-body" data-rv style="max-width:52ch;margin:14px auto 0">画册里列的只是常备的一部分。把测量对象、量程、精度要求发过来，当天回选型建议和报价。</p>
+    <div class="hero__cta" data-rv style="justify-content:center"><a class="btn" href="tel:18018579934">180-1857-9934</a><a class="btn btn--ghost" href="#top">回到目录顶部</a></div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__cols">
+      <div><h5>极曜微科技</h5><ul><li>上海极曜微科技有限公司</li><li>工业检测仪器综合供应商</li><li>上海 · 立足长三角</li></ul></div>
+      <div><h5>产品</h5><ul><li><a href="#cat-thermal">红外热成像仪测温系统</a></li><li><a href="#cat-acoustic">声学成像仪检测系统</a></li><li><a href="#cat-electrical">电气测量仪器</a></li><li><a href="#cat-em">电子显微系统</a></li><li><a href="#cat-om">光学显微系统</a></li><li><a href="#ask">全部 101 款</a></li></ul></div>
+      <div><h5>服务</h5><ul><li>选型支持</li><li>原厂保修对接</li><li>到期校准与维修</li><li>耗材供应</li></ul></div>
+      <div><h5>联系</h5><ul><li>销售热线 180-1857-9934</li><li>工作时间 周一至周六</li></ul></div>
+    </div>
+    <p class="footer__note">
+      页面说明：此处仅用于说明经营范围。正式上线前请补齐：ICP 备案号、授权书证明页。主体名称已按营业执照写为「上海极曜微科技有限公司」。
+      产品图片与参数来源：公司 2026 版产品画册。
+    </p>
+  </div>
+</footer>
+
+<script src="js/reveal.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/menu.js"></script>   <!-- 必须紧跟 nav.js：nav.js 会跳过带 data-menu 的栏目，两个脚本才不打架 -->
+<script src="js/hover.js"></script>
+<script src="js/products.js"></script>  <!-- 放最后：它要给上面渲染出来的卡片做筛选，依赖 DOM -->
+</body>
+</html>

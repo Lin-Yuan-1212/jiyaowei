@@ -1,0 +1,91 @@
+/* ============================================================
+   scrub.css —— 苹果最招牌那一招：滚动帧动画带
+   ------------------------------------------------------------
+   原理（和 layout.css §6 的 .band 是同一套思路，只是更完整）：
+     外层 .scrub 很高（N 屏），内层 .scrub__stage 用 position:sticky 钉在屏幕上一整屏。
+     于是"多滚过的那些高度"就变成了一条动画时间轴。
+     js/scrub.js 每帧只算两个 0~1 的数，写进每个 .scrub__item 的 --o 和 --k：
+       --o = 这一帧此刻该有多不透明（交叉淡化）
+       --k = 这一帧在自己窗口里走到第几步（用来做持续推近）
+     所有位移、缩放、模糊都由本文件的 calc() 换算 —— 想改观感只改这里，不用碰 JS。
+   ============================================================ */
+
+/* ---------- 1. 舞台 ---------- */
+.scrub{
+  position:relative;
+  /* 总高 = 帧数 × 每帧占用的滚动量。改这个乘数就改了"手感快慢"：
+     120vh/帧 = 划得快、240vh/帧 = 从容。下面用 --per 单独抽出来方便你试 */
+  --per:200vh;
+  height:calc(var(--per) * var(--n,4));
+  background:#0a0d12;                        /* 深色底：图片交叉淡化的瞬间不会露白 */
+}
+.scrub__stage{
+  position:sticky;top:0;height:100vh;overflow:hidden; /* overflow 必写：里面的图被 scale 放大后不能溢出到页面上 */
+}
+
+/* ---------- 2. 单帧 ---------- */
+.scrub__item{
+  position:absolute;inset:0;
+  opacity:var(--o,0);                        /* 由 JS 写入；默认 0，所以第一帧之前是黑的 */
+  transform:scale(calc(1.04 + var(--k,0) * .10)); /* 持续推近 4%→14%，形成 Ken Burns 感 */
+  transform-origin:50% 46%;                  /* 略高于中心：推近时主体（仪器）不会被裁到画面外 */
+  will-change:opacity,transform;             /* 提前告诉合成器这两层会变，避免每帧重建图层 */
+  pointer-events:none;                       /* 淡出的帧不能挡住点击 */
+}
+.scrub__item.is-active{pointer-events:auto}  /* 只有当前帧可交互 */
+.scrub__img{width:100%;height:100%;object-fit:cover} /* cover：不变形填满，代价是裁边，所以构图要留余量 */
+
+/* 压暗 + 顶部渐隐，保证白字文案在任何一张图上都读得清。
+   这一层是"苹果式图片文案"的关键：不是给文字加底色块，而是给图片加遮罩 */
+.scrub__item::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(10,13,18,.55) 0%,rgba(10,13,18,.15) 38%,rgba(10,13,18,.86) 100%);
+}
+
+/* ---------- 3. 帧内文案 ---------- */
+.scrub__cap{
+  position:absolute;left:0;right:0;bottom:clamp(74px,13vh,132px);
+  z-index:2;padding:0 clamp(22px,5vw,64px);max-width:760px;
+  transform:translateY(calc((1 - var(--o,0)) * 22px));
+  /* 阈值必须 > 0.5：相邻两帧的 --o 之和恒为 1，所以两帧同时超过 0.5 不可能 ——
+     数学上保证任何时刻只有一条字幕可见，不会出现两行字叠在一起的脏画面。
+     斜率从 3.5 降到 2.2：字幕在 --o 从 0.55 涨到 1 的整段路里慢慢浮现，
+     而不是一过阈值就"啪"地跳出来 —— 之前那个值把渐变感吃掉了。 */
+  opacity:clamp(0, calc((var(--o,0) - .55) * 2.2), 1);
+}
+.scrub__kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.62);margin-bottom:10px}
+.scrub__t{font-size:clamp(26px,4.4vw,52px);font-weight:700;line-height:1.12;color:#fff;letter-spacing:0}
+.scrub__d{margin-top:12px;font-size:clamp(14px,1.5vw,17px);line-height:1.65;color:rgba(255,255,255,.76);max-width:52ch}
+
+/* ---------- 4. HUD：进度条 + 序号 ---------- */
+.scrub__hud{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:0 clamp(22px,5vw,64px) 26px;display:flex;align-items:center;gap:16px;pointer-events:none}
+.scrub__bar{flex:1;height:2px;background:rgba(255,255,255,.18);border-radius:2px;overflow:hidden}
+.scrub__bar > i{display:block;height:100%;width:calc(var(--p,0) * 100%);background:#fff;transform-origin:left}
+/* 进度条直接吃 JS 写的 --p（整段 0→1），一行 CSS 都不用改 */
+.scrub__step{font-size:12px;letter-spacing:.12em;color:rgba(255,255,255,.7);font-variant-numeric:tabular-nums} /* 序号等宽，翻页时不抖 */
+.scrub__hint{font-size:12px;color:rgba(255,255,255,.45)}
+
+/* 左上角的固定标题：整段动画期间一直在那儿，起"锚"的作用 */
+.scrub__label{position:absolute;top:clamp(26px,6vh,64px);left:0;z-index:3;padding-left:clamp(22px,5vw,64px);font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+
+/* ---------- 4.5 无 JS 兜底 ----------
+   .scrub__item 默认 --o:0（全黑看不见）。脚本正常运行时会加 .js-scrub 接管；
+   万一 JS 出错或被拦截，这里让第一帧静态显示，绝不能出现"整段是黑的"。 */
+.scrub:not(.js-scrub) .scrub__item{opacity:0}
+.scrub:not(.js-scrub) .scrub__item:first-child{opacity:1;transform:none;pointer-events:auto}
+.scrub:not(.js-scrub) .scrub__item:first-child .scrub__cap{opacity:1;transform:none}
+.scrub:not(.js-scrub) .scrub__hud{display:none}
+
+/* ---------- 5. 降级：系统开了"减少动态效果" ----------
+   帧动画带对晕动症是最不友好的一类效果，必须给静态版本：
+   取消 sticky，把每一帧变成正常的一屏图片卡片，文案全部直接可见。 */
+@media (prefers-reduced-motion:reduce){
+  .scrub{height:auto;background:#0a0d12}
+  .scrub__stage{position:static;height:auto;display:grid;gap:2px}
+  .scrub__item,.scrub:not(.js-scrub) .scrub__item{position:relative;inset:auto;opacity:1;transform:none;min-height:78vh;pointer-events:auto}
+  .scrub__cap,.scrub:not(.js-scrub) .scrub__item .scrub__cap{transform:none;opacity:1}
+  .scrub__hud,.scrub__label{display:none}
+}
+/* 窄屏：屏幕本身就矮，每帧给 150vh，让一次交叉淡化大约落在两格滚轮之间，
+   否则鼠标滚轮一划就冲过去了，看起来像"直接切图"而不是"渐变" */
+@media (max-width:620px){ .scrub{--per:150vh} }

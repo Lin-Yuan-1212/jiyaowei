@@ -1,0 +1,128 @@
+/* ============================================================
+   base.css —— 设计令牌 + 排版 + 元素重置
+   职责：只放"全局变量和字"，不放任何具体版块布局。
+   想换整套配色，只改 :root 里这十几行就够了。
+   ============================================================ */
+
+/* ---------- 1. 设计令牌（Design Tokens） ---------- */
+:root{
+  /* 背景与前景：亮色主题 */
+  --bg:#ffffff;              /* 页面主背景 */
+  --bg-2:#f5f5f7;            /* 交替分区背景，苹果很爱用极浅灰做"一节深一节浅"的节奏 */
+  --ink:#1d1d1f;             /* 主文字色：注意不是纯黑 #000，纯黑在屏幕上发硬 */
+  --ink-2:#6e6e73;           /* 次级文字：说明、副标题 */
+  --ink-3:#86868b;           /* 更弱的文字：脚注、版权行 */
+  --line:rgba(0,0,0,.08);    /* 分隔线用半透明黑，深浅背景上都能看 */
+
+  /* 主色与渐变：全站唯一的"品牌色入口" */
+  --accent:#0071e3;          /* 按钮、链接 */
+  --grad:linear-gradient(135deg,#0071e3,#5e5ce6 45%,#bf5af2); /* 渐变文字/光晕共用这一条 */
+
+  /* 尺寸节奏：所有留白都从这几个数里选，页面才不会忽松忽紧 */
+  --maxw:1024px;             /* 内容最大宽度，超了居中留白 */
+  --gap:clamp(48px,8vw,120px); /* 分区上下留白：clamp(最小, 随视口, 最大) —— 流体间距的核心 */
+  --nav-h:52px;              /* 吸顶导航高度，hero 要靠它算偏移 */
+  --r:18px;                  /* 卡片圆角 */
+  --r-sm:10px;
+
+  /* 阴影：低透明度 + 大模糊 = 高级感；透明度一高就显脏 */
+  --sh-1:0 4px 12px rgba(0,0,0,.04);
+  --sh-2:0 20px 44px rgba(0,0,0,.10);
+
+  /* 动效曲线：这条 cubic-bezier 是"起步快、收尾慢"，接近物理惯性 */
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --dur:.6s;
+
+  color-scheme:light;        /* 告诉浏览器表单控件/滚动条按亮色画 */
+}
+
+/* 深色主题：只覆盖变量，不重写任何规则 —— 这就是令牌化的最大好处 */
+[data-theme="dark"]{
+  --bg:#000000;
+  --bg-2:#101014;
+  --ink:#f5f5f7;
+  --ink-2:#a1a1a6;
+  --ink-3:#86868b;
+  --line:rgba(255,255,255,.14);
+  --sh-1:0 4px 12px rgba(0,0,0,.4);
+  --sh-2:0 20px 44px rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+
+/* ---------- 2. 重置 ---------- */
+*,*::before,*::after{box-sizing:border-box}  /* 让 padding 不再撑大宽度，布局计算简单一半 */
+html{-webkit-text-size-adjust:100%}          /* 横屏时 iPhone 不自动放大字号 */
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  /* 字体栈从右往左找：有苹果系统字体就用（SF Pro 是苹果质感的一半来源），没有就退到苹方/微软雅黑 */
+  font-size:17px;                            /* 正文比常见的 14/15px 大一号，这是苹果页面的典型特征 */
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;        /* Mac 上文字更细更干净 */
+  transition:background-color .4s var(--ease),color .4s var(--ease); /* 切主题时整页柔和渐变，不闪一下 */
+}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+h1,h2,h3,h4,p{margin:0}
+
+/* ---------- 3. 排版阶梯 ----------
+   苹果的字重对比非常极端：标题又粗又大，正文很细。
+   字号一律用 clamp()，手机上自动缩小，不需要写一堆媒体查询。 */
+.t-eyebrow{
+  font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-2);margin-bottom:12px;     /* 小标签压在标题上方，形成层次 */
+}
+.t-hero{font-size:clamp(38px,7.2vw,88px);font-weight:700;line-height:1.05;letter-spacing:-.02em}
+.t-title{font-size:clamp(28px,4.6vw,56px);font-weight:700;line-height:1.08;letter-spacing:-.015em}
+.t-sub{font-size:clamp(18px,2.2vw,24px);font-weight:400;line-height:1.4;color:var(--ink-2)}
+.t-body{font-size:17px;line-height:1.65;color:var(--ink-2)}
+.t-fine{font-size:12px;line-height:1.5;color:var(--ink-3)}
+/* 中文要特别注意：letter-spacing 负值只适合拉丁字母，中文用正值更透气 */
+:lang(zh-CN) .t-hero,:lang(zh-CN) .t-title{letter-spacing:0}
+
+/* 渐变文字：背景画渐变 + 文字当蒙版。想换色只改 --grad */
+.t-grad{
+  background:var(--grad);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent; /* 两个属性都写：老 WebKit 只认 text-fill-color */
+}
+
+/* ---------- 4. 通用容器与分区 ---------- */
+.wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 22px} /* margin auto 居中 + padding 保证窄屏不贴边 */
+.section{padding:var(--gap) 0}
+.section--alt{background:var(--bg-2)}        /* 浅灰交替分区 */
+/* 这个分区名还叫 --dark，但亮色下它只是"重音分区"：主色压出的极浅底 + 白卡片。
+   为什么不用 --bg-2：产品和联系两页里它都紧挨着浅灰区（页脚就是 --bg-2），
+   换成灰底会和页脚糊成一块；用 6% 主色调出来的浅蓝既比灰区重一点，又不会黑。
+   黑底只留给用户主动切到深色主题时 —— 类名没改，因为 products.html 是构建脚本生成的，改名会在下次生成时静默退回。 */
+.section--dark{background:var(--bg-2);color:var(--ink)}   /* 不支持 color-mix 的老浏览器就退回浅灰 */
+@supports (color:color-mix(in srgb,red,blue)){
+  .section--dark{
+    background:color-mix(in srgb,var(--accent) 6%,var(--bg)); /* 6% 是上限：调到 10% 时正文（#6e6e73）对比度掉到 4.42，低于 WCAG AA 的 4.5 */
+    box-shadow:inset 0 1px 0 var(--line),inset 0 -1px 0 var(--line); /* 浅蓝和纯白明度差极小，靠上下描边把边界读出来 */
+  }
+}
+[data-theme="dark"] .section--dark{background:#000;color:#f5f5f7;box-shadow:inset 1px 0 0 var(--line),inset -1px 0 0 var(--line)} /* 页面本身已是黑的，这块要更黑 + 描边才分得开 */
+[data-theme="dark"] .section--dark .card{background:#1d1d1f}  /* --bg 在深色下是纯黑，卡片会跟底融为一体 */
+[data-theme="dark"] .section--dark .t-sub,[data-theme="dark"] .section--dark .t-body{color:rgba(255,255,255,.72)}
+[data-theme="dark"] .section--dark .t-eyebrow{color:rgba(255,255,255,.55)}
+.sec-head{max-width:640px;margin-bottom:clamp(28px,4vw,56px)} /* 标题区统一限宽，行长太长读起来累 */
+
+/* ---------- 5. 按钮与箭头链接 ---------- */
+.btn{
+  display:inline-block;padding:12px 24px;border-radius:980px; /* 980px 这种"超大值"就是胶囊形的写法 */
+  background:var(--accent);color:#fff;font-size:16px;font-weight:500;
+  transition:transform .25s var(--ease),filter .25s var(--ease),background-color .25s;
+}
+.btn:hover{filter:brightness(1.08);transform:translateY(-1px)} /* 悬浮只动 1px：微到察觉不出，但手感立刻不同 */
+.btn:active{transform:translateY(0) scale(.985)}
+.btn--ghost{background:transparent;color:var(--accent);box-shadow:inset 0 0 0 1.5px currentColor} /* inset 描边不占布局宽度 */
+.link-arrow{display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-size:17px;font-weight:500}
+.link-arrow .ar{transition:transform .3s var(--ease)}          /* 箭头：hover 时往前挪，暗示"点进去还有内容" */
+.link-arrow:hover .ar{transform:translateX(4px)}
+
+/* 焦点可见性：只用键盘时才出现描边，鼠标点击不打扰 */
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}

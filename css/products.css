@@ -1,0 +1,97 @@
+/* ============================================================
+   products.css —— 产品中心目录页特有样式
+   职责：只补 base/layout/effects 里没有的东西：目录页头、吸顶筛选条、
+         带图产品卡。配色、圆角、间距一律用 base.css 的令牌，不新造数值。
+   ============================================================ */
+
+/* ---------- 1. 当前页导航标记 ----------
+   不用 .is-active：那个类由 js/nav.js 的滚动高亮接管，它会不断把类清掉。
+   这里用一个自己的类，脚本碰不到，"你在哪一页"就一直是亮的。 */
+.nav__here{color:var(--ink)!important;font-weight:600}
+
+/* ---------- 2. 目录页头 ----------
+   不需要为吸顶导航额外留 top 偏移：.nav 是 position:sticky（占着文档流的位置），
+   不是 fixed，所以它下面天然就有 52px 空位。用 .section 自己的 --gap 就够了。 */
+
+/* ---------- 3. 吸顶筛选条 ---------- */
+.pbar{
+  position:sticky;top:var(--nav-h);z-index:40;      /* 层级低于导航(50)，滚起来正好压在导航下面 */
+  background:color-mix(in srgb,var(--bg) 82%,transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  backdrop-filter:saturate(180%) blur(20px);        /* 和吸顶导航同一套毛玻璃，两块看起来是一体的 */
+  border-bottom:1px solid var(--line);
+  padding:10px 0;
+}
+@supports not (backdrop-filter:blur(1px)){ .pbar{background:var(--bg)} }/* 不支持毛玻璃就退回实底，否则文字会和下面的卡片叠在一起 */
+.pbar__in{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 22px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pbar__n{font-size:13px;color:var(--ink-3);white-space:nowrap}
+
+/* 搜索框：胶囊形，和按钮同一套形状语言 */
+.psearch{flex:1 1 220px;min-width:180px}
+.psearch input{
+  width:100%;padding:9px 16px;border-radius:980px;border:1px solid var(--line);
+  background:var(--bg-2);color:var(--ink);font:inherit;font-size:14px;line-height:1.4;
+  transition:border-color .25s var(--ease),background-color .25s;
+  -webkit-appearance:none;appearance:none;          /* 去掉浏览器给 search 控件画的原地放大镜和内边距 */
+}
+.psearch input::placeholder{color:var(--ink-3)}
+.psearch input:focus{outline:none;border-color:var(--accent);background:var(--bg)}
+.psearch input::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}/* 用 Esc 清空就够，不保留系统小按钮 */
+
+/* 分类胶囊：横向可滑，窄屏不换行成十几排 */
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;max-width:100%;padding:2px 0;-webkit-overflow-scrolling:touch}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;
+  padding:7px 13px;border-radius:980px;border:1px solid var(--line);background:var(--bg);
+  font-size:13px;color:var(--ink-2);white-space:nowrap;
+  transition:border-color .25s var(--ease),color .25s var(--ease),background-color .25s var(--ease);
+}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.chip b{font-weight:600;font-size:11px;color:var(--ink-3);background:var(--bg-2);border-radius:980px;padding:1px 6px}
+/* 当前分类：由 js/products.js 的滚动跟随打上，点胶囊也会立刻点亮。
+   不用 .is-active 的公共含义：nav.js 只管导航里那批链接，碰不到这里的 .chip。
+   描边 + 计数徽章上底色，两层信息一起变，浅深两套主题都看得出"是当前这一类"。 */
+.chip.is-active{border-color:var(--accent);background:var(--bg-2);color:var(--ink);font-weight:600}
+.chip.is-active b{color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,transparent)}
+@media (max-width:700px){ .pbar__in{gap:8px} .pbar__n{display:none} }/* 窄屏优先留给搜索框和胶囊 */
+
+/* ---------- 4. 产品卡 ----------
+   直接复用 .card（自带悬浮抬升、鼠标柔光、圆角描边），这里只把内边距挪到内容层，
+   好让图片能贴着卡片上沿铺满。 */
+.pcard{padding:0;gap:0;min-height:0}
+/* 图框改成固定比例 8:5，和 img/products-studio/ 里那张 640×400 的影棚底板一模一样：
+   比例对齐后 cover 不会裁到设备，底板又能严丝合缝铺满整格，看起来像一次拍完的。
+   （以前是 186px 定高 + contain + 16px 内边距，浅灰底板外面再套一圈灰，像贴了张贴纸。） */
+.pc-img{
+  position:relative;aspect-ratio:8/5;display:grid;place-items:center;overflow:hidden;
+  background:var(--bg-2);border-bottom:1px solid var(--line);
+}
+.pc-img img{width:100%;height:100%;object-fit:cover;display:block}
+/* cover 的前提是图已经是影棚模板产物；未处理的图仍带画册白底，套上模板后要改回 contain */
+.pc-body{padding:clamp(20px,2.4vw,28px);display:flex;flex-direction:column;gap:6px;flex:1}
+.pc-body h3{font-size:19px}
+.pc-model{font-size:14px!important;font-weight:600;color:var(--accent)!important;letter-spacing:.01em}
+.pc-brand{font-size:12px!important;color:var(--ink-3)!important;margin-bottom:6px}
+.pc-specs{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.pc-specs li{font-size:13.5px;line-height:1.55;color:var(--ink-2);padding-left:15px;position:relative}
+.pc-specs li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:color-mix(in srgb,var(--accent) 55%,var(--line))}
+.pc-foot{
+  margin-top:auto;padding-top:14px;border-top:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  font-size:12px;color:var(--ink-3);
+}
+.pc-foot .link-arrow{font-size:14px}
+
+/* ---------- 5. 分类标题里的数量角标 ---------- */
+.cat-n{display:inline-block;margin-left:10px;font-size:14px;font-weight:500;color:var(--ink-3);vertical-align:middle}
+/* 浏览器原生的 #锚点跳转会把分类标题正好顶到视口上沿，被吸顶的导航(52)+筛选条(108)盖住。
+   js/products.js 里的 jumpTo 自己减了这个高度，但手动改地址栏、前进后退仍走原生行为，所以这里补一道。 */
+section.cat{scroll-margin-top:calc(var(--nav-h) + 116px)}
+
+/* ---------- 6. 搜索时的显隐 ----------
+   用 display:none 而不是 opacity:0 —— 隐藏的卡片不能继续占格子，
+   否则筛完只剩三款却留着一屏空位。 */
+.pcard.is-off,.cat.is-off{display:none}
+.pc-none{padding:40px 0 8px;font-size:15px;color:var(--ink-2)}
+.pc-none b{color:var(--ink)}
