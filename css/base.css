@@ -9,6 +9,7 @@
   /* 背景与前景：亮色主题 */
   --bg:#ffffff;              /* 页面主背景 */
   --bg-2:#f5f5f7;            /* 交替分区背景，苹果很爱用极浅灰做"一节深一节浅"的节奏 */
+  --bg-3:#1d1d1f;            /* 深色分区背景（同一套变量里预存，section--dark 直接换用） */
   --ink:#1d1d1f;             /* 主文字色：注意不是纯黑 #000，纯黑在屏幕上发硬 */
   --ink-2:#6e6e73;           /* 次级文字：说明、副标题 */
   --ink-3:#86868b;           /* 更弱的文字：脚注、版权行 */
@@ -40,6 +41,7 @@
 [data-theme="dark"]{
   --bg:#000000;
   --bg-2:#101014;
+  --bg-3:#f5f5f7;
   --ink:#f5f5f7;
   --ink-2:#a1a1a6;
   --ink-3:#86868b;
@@ -94,21 +96,15 @@ h1,h2,h3,h4,p{margin:0}
 .wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 22px} /* margin auto 居中 + padding 保证窄屏不贴边 */
 .section{padding:var(--gap) 0}
 .section--alt{background:var(--bg-2)}        /* 浅灰交替分区 */
-/* 这个分区名还叫 --dark，但亮色下它只是"重音分区"：主色压出的极浅底 + 白卡片。
-   为什么不用 --bg-2：产品和联系两页里它都紧挨着浅灰区（页脚就是 --bg-2），
-   换成灰底会和页脚糊成一块；用 6% 主色调出来的浅蓝既比灰区重一点，又不会黑。
-   黑底只留给用户主动切到深色主题时 —— 类名没改，因为 products.html 是构建脚本生成的，改名会在下次生成时静默退回。 */
-.section--dark{background:var(--bg-2);color:var(--ink)}   /* 不支持 color-mix 的老浏览器就退回浅灰 */
-@supports (color:color-mix(in srgb,red,blue)){
-  .section--dark{
-    background:color-mix(in srgb,var(--accent) 6%,var(--bg)); /* 6% 是上限：调到 10% 时正文（#6e6e73）对比度掉到 4.42，低于 WCAG AA 的 4.5 */
-    box-shadow:inset 0 1px 0 var(--line),inset 0 -1px 0 var(--line); /* 浅蓝和纯白明度差极小，靠上下描边把边界读出来 */
-  }
-}
-[data-theme="dark"] .section--dark{background:#000;color:#f5f5f7;box-shadow:inset 1px 0 0 var(--line),inset -1px 0 0 var(--line)} /* 页面本身已是黑的，这块要更黑 + 描边才分得开 */
-[data-theme="dark"] .section--dark .card{background:#1d1d1f}  /* --bg 在深色下是纯黑，卡片会跟底融为一体 */
-[data-theme="dark"] .section--dark .t-sub,[data-theme="dark"] .section--dark .t-body{color:rgba(255,255,255,.72)}
-[data-theme="dark"] .section--dark .t-eyebrow{color:rgba(255,255,255,.55)}
+.section--dark{background:var(--bg-3);color:#f5f5f7} /* 深色分区：整块反色，视觉重量最大 */
+[data-theme="dark"] .section--dark{background:#000;box-shadow:inset 1px 0 0 var(--line),inset -1px 0 0 var(--line)} /* 深色主题下页面本身就是黑的，这块必须更黑 + 描边才分得开 */
+.section--dark .t-sub,.section--dark .t-body{color:rgba(255,255,255,.72)}
+.section--dark .t-eyebrow{color:rgba(255,255,255,.55)}
+/* 深色分区里的卡片固定成浅色：否则主题一切换，卡片会跟着变黑，白字压黑底就糊了 */
+.section--dark .plan{background:#fff;color:#1d1d1f}
+.section--dark .plan h3{color:#1d1d1f}
+.section--dark .plan__price{color:#1d1d1f}
+.section--dark .plan__unit,.section--dark .plan li{color:#6e6e73}
 .sec-head{max-width:640px;margin-bottom:clamp(28px,4vw,56px)} /* 标题区统一限宽，行长太长读起来累 */
 
 /* ---------- 5. 按钮与箭头链接 ---------- */
